@@ -1,0 +1,886 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Ruta de Redes – Unidad II</title>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;700;800&family=Figtree:wght@400;600;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<style>
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
+--bg:#F1F5F9;--sf:#FFFFFF;--sf2:#E4EAF3;--ink:#17233B;--ink2:#56627A;--line:#D3DCE8;
+--ok:#178A52;--okbg:#DCF3E5;--bad:#C93A35;--badbg:#FBE2E0;
+--blue:#2B6CDF;--yellow:#F0B400;--green:#1F9D62;--red:#DB3F39;--purple:#7448D2;--orange:#EC7A1C;--teal:#0F9DA3;--pink:#D6408A;--indigo:#4050C8}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+--bg:#0E1525;--sf:#172136;--sf2:#22304A;--ink:#E8EEF8;--ink2:#9DABC5;--line:#2C3B58;
+--ok:#4FD08B;--okbg:#153B2A;--bad:#FF7A74;--badbg:#45211F;
+--blue:#5B92F5;--yellow:#F5C231;--green:#3CC083;--red:#F2645F;--purple:#9A78F0;--orange:#F59A4A;--teal:#2EC4CA;--pink:#EE69A9;--indigo:#7685EE}}
+:root[data-theme="dark"]{
+--bg:#0E1525;--sf:#172136;--sf2:#22304A;--ink:#E8EEF8;--ink2:#9DABC5;--line:#2C3B58;
+--ok:#4FD08B;--okbg:#153B2A;--bad:#FF7A74;--badbg:#45211F;
+--blue:#5B92F5;--yellow:#F5C231;--green:#3CC083;--red:#F2645F;--purple:#9A78F0;--orange:#F59A4A;--teal:#2EC4CA;--pink:#EE69A9;--indigo:#7685EE}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*,*::before,*::after{box-sizing:inherit}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 16px/1.5 'Figtree',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;-webkit-tap-highlight-color:transparent}
+h1,h2,h3{font-family:'Bricolage Grotesque','Figtree',system-ui,sans-serif;margin:0;line-height:1.15}
+p{margin:0}
+code{font-family:'JetBrains Mono',ui-monospace,Menlo,Consolas,monospace;font-size:.92em;font-weight:500;background:var(--sf2);padding:1px 6px;border-radius:6px;word-break:break-all}
+button{font-family:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--blue);outline-offset:2px}
+.u-blue{--u:var(--blue);--ui:#fff}.u-yellow{--u:var(--yellow);--ui:#2A2000}.u-green{--u:var(--green);--ui:#fff}
+.u-red{--u:var(--red);--ui:#fff}.u-purple{--u:var(--purple);--ui:#fff}.u-orange{--u:var(--orange);--ui:#2A1400}
+.u-teal{--u:var(--teal);--ui:#fff}.u-pink{--u:var(--pink);--ui:#fff}.u-indigo{--u:var(--indigo);--ui:#fff}
+#app{max-width:720px;margin:0 auto;padding:20px 16px 110px}
+.small{font-size:.88rem;color:var(--ink2)}
+.btn{font:700 1rem 'Figtree',system-ui,sans-serif;border:0;border-radius:14px;padding:13px 22px;cursor:pointer;background:var(--u,var(--blue));color:var(--ui,#fff);box-shadow:0 4px 0 color-mix(in srgb,var(--u,var(--blue)) 62%,#000);transition:transform .08s,box-shadow .08s}
+.btn:active:not(:disabled){transform:translateY(3px);box-shadow:0 1px 0 color-mix(in srgb,var(--u,var(--blue)) 62%,#000)}
+.btn:disabled{background:var(--sf2);color:var(--ink2);box-shadow:0 4px 0 var(--line);cursor:not-allowed}
+.btn.ghost{background:var(--sf);color:var(--ink);border:2px solid var(--line);box-shadow:0 4px 0 var(--line);padding:11px 20px}
+.btn.big{width:100%;padding:15px 22px;font-size:1.05rem}
+/* inicio */
+.hero h1{font-size:clamp(2rem,7vw,2.7rem);font-weight:800;letter-spacing:-.02em}
+.hero>p{color:var(--ink2);margin-top:4px}
+.stats{display:flex;flex-wrap:wrap;gap:8px;margin:16px 0 14px}
+.chip{display:inline-flex;align-items:center;gap:6px;background:var(--sf);border:2px solid var(--line);border-radius:99px;padding:5px 14px 5px 10px;font-weight:600;font-size:.92rem}
+.chip svg{width:20px;height:20px}.chip .fl{color:var(--orange)}.chip .sr{color:var(--yellow)}
+.prog{height:12px;background:var(--sf2);border-radius:99px;overflow:hidden;margin-bottom:6px}
+.prog i{display:block;height:100%;background:var(--green);border-radius:99px}
+.next{margin-top:20px;background:var(--sf);border:2px solid var(--u);border-radius:18px;padding:16px 18px;display:flex;gap:14px;align-items:center;justify-content:space-between;flex-wrap:wrap}
+.next h2{font-size:1.3rem;margin-top:2px}
+.unit{margin-top:30px}
+.uh{background:var(--u);color:var(--ui);border-radius:18px;padding:16px 18px;display:flex;justify-content:space-between;align-items:center;gap:12px;box-shadow:0 4px 0 color-mix(in srgb,var(--u) 62%,#000);margin-bottom:22px}
+.uh h2{font-size:1.25rem;font-weight:700}.uh p{font-size:.9rem;opacity:.92}
+.cnt{font:700 .95rem 'JetBrains Mono',monospace;background:rgba(255,255,255,.22);border-radius:99px;padding:3px 12px;flex:none}
+.u-yellow .cnt,.u-orange .cnt{background:rgba(0,0,0,.12)}
+.path{padding:0 2px}
+.les{position:relative;display:grid;grid-template-columns:56px 1fr auto;gap:14px;align-items:center;width:100%;text-align:left;background:none;border:0;padding:0 0 24px;cursor:pointer}
+.les:last-child{padding-bottom:4px}
+.les:not(:last-child)::before{content:'';position:absolute;left:24px;top:46px;bottom:-8px;width:8px;background:var(--u);border-radius:4px}
+.node{position:relative;z-index:1;width:56px;height:56px;border-radius:50%;background:var(--u);color:var(--ui);display:grid;place-items:center;font:800 .98rem 'Bricolage Grotesque',sans-serif;box-shadow:0 4px 0 color-mix(in srgb,var(--u) 62%,#000)}
+.node svg{width:26px;height:26px}
+.node.done{background:var(--sf);color:var(--u);border:4px solid var(--u);box-shadow:none}
+.node.next{outline:5px solid color-mix(in srgb,var(--u) 30%,transparent)}
+.lt{display:flex;flex-direction:column;min-width:0}.lt b{font-weight:700;font-size:1.02rem}.lt small{color:var(--ink2);font-size:.86rem}
+.sts{display:flex;gap:1px}.st svg{width:17px;height:17px;color:var(--line)}.st.on svg{color:var(--yellow)}
+.les:hover .lt b{text-decoration:underline;text-underline-offset:3px}
+/* navegacion */
+#nav{position:fixed;left:0;right:0;bottom:0;z-index:10;background:var(--sf);border-top:2px solid var(--line);padding:6px 10px calc(6px + env(safe-area-inset-bottom,0px))}
+.nav-in{display:flex;gap:6px;max-width:720px;margin:0 auto}
+#nav button{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;background:none;border:2px solid transparent;border-radius:12px;padding:6px 4px;font-weight:600;font-size:.8rem;color:var(--ink2);cursor:pointer}
+#nav button svg{width:24px;height:24px}
+#nav button[aria-current="page"]{color:var(--blue);background:color-mix(in srgb,var(--blue) 12%,var(--sf));border-color:color-mix(in srgb,var(--blue) 35%,transparent)}
+/* repaso y glosario */
+.pg h1{font-size:1.9rem;font-weight:800}.pg>.small{margin:4px 0 18px}
+.card{background:var(--sf);border:2px solid var(--line);border-radius:18px;padding:16px 18px;margin-bottom:14px;display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap}
+.card h2{font-size:1.15rem}
+.pg h3{font-size:1.1rem;margin:26px 0 12px}
+.drills{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:12px}
+.drill{text-align:left;background:var(--sf);border:2px solid var(--line);border-left:10px solid var(--u);border-radius:14px;padding:12px 14px;cursor:pointer;display:flex;flex-direction:column;gap:2px}
+.drill b{font-weight:700}.drill small{color:var(--ink2)}
+.drill:hover{border-color:var(--u)}
+.search{width:100%;font:500 1rem 'Figtree',sans-serif;padding:13px 16px;border-radius:14px;border:2px solid var(--line);background:var(--sf);color:var(--ink);margin-bottom:6px}
+.search:focus{border-color:var(--blue);outline:none}
+.gu{margin-top:22px;color:var(--ink2);font-weight:700;display:flex;align-items:center;gap:8px;font-size:.95rem}
+.gu i{width:14px;height:14px;border-radius:50%;background:var(--u);display:inline-block}
+.term{background:var(--sf);border:2px solid var(--line);border-left:8px solid var(--u);border-radius:12px;padding:10px 14px;margin-top:10px}
+.term b{display:block;font-size:1.02rem}.term span{color:var(--ink2);font-size:.95rem}
+.empty{color:var(--ink2);margin-top:22px}
+/* sesion */
+#lesson{position:fixed;inset:0;z-index:20;background:var(--bg);display:flex;flex-direction:column;padding-top:env(safe-area-inset-top,0px)}
+#lesson[hidden]{display:none}
+#hud{flex:none}
+.l-top{display:flex;align-items:center;gap:14px;padding:14px 16px 6px;max-width:720px;width:100%;margin:0 auto}
+.x{background:none;border:0;cursor:pointer;color:var(--ink2);padding:4px;display:grid;place-items:center;border-radius:10px}.x svg{width:26px;height:26px}
+.bar{flex:1;height:14px;background:var(--sf2);border-radius:99px;overflow:hidden}
+.bar i{display:block;height:100%;background:var(--u);border-radius:99px;transition:width .35s}
+.hearts{display:flex;align-items:center;gap:5px;color:var(--red);font-weight:800}.hearts svg{width:26px;height:26px}.hearts.low{animation:pulse 1s infinite}
+@keyframes pulse{50%{opacity:.55}}
+.l-main{flex:1;overflow:auto;padding:16px 16px 24px;max-width:720px;width:100%;margin:0 auto}
+.ins{color:var(--ink2);font-weight:600;font-size:.95rem;margin-bottom:6px}
+.l-q{font-size:clamp(1.3rem,4.6vw,1.75rem);font-weight:700;margin-bottom:22px;line-height:1.3;overflow-wrap:anywhere}
+.l-q code{font-size:.85em}
+.opt{display:flex;gap:12px;align-items:center;width:100%;text-align:left;font:600 1rem 'Figtree',sans-serif;padding:14px 16px;border-radius:14px;background:var(--sf);color:var(--ink);border:2px solid var(--line);box-shadow:0 3px 0 var(--line);cursor:pointer;margin-bottom:12px;overflow-wrap:anywhere}
+.opt .k{width:28px;height:28px;border-radius:8px;border:2px solid var(--line);display:grid;place-items:center;font-size:.82rem;color:var(--ink2);flex:none}
+.opt.sel{border-color:var(--u);background:color-mix(in srgb,var(--u) 12%,var(--sf));box-shadow:0 3px 0 var(--u)}
+.opt.sel .k{border-color:var(--u);color:var(--u)}
+.opt.right{border-color:var(--ok);background:var(--okbg);box-shadow:0 3px 0 var(--ok)}
+.opt.wrong{border-color:var(--bad);background:var(--badbg);box-shadow:0 3px 0 var(--bad)}
+.opt:disabled{cursor:default}
+.tf{display:grid;grid-template-columns:1fr 1fr;gap:12px}.tf .opt{justify-content:center;font-size:1.1rem;padding:22px 10px}
+.txt{width:100%;font:600 1.25rem 'JetBrains Mono',ui-monospace,monospace;padding:16px;border-radius:14px;border:2px solid var(--line);background:var(--sf);color:var(--ink)}
+.txt:focus{border-color:var(--u);outline:none}
+.txt.right{border-color:var(--ok);background:var(--okbg)}.txt.wrong{border-color:var(--bad);background:var(--badbg)}
+.bits{display:grid;grid-template-columns:repeat(8,1fr);gap:6px;margin:10px 0 18px}
+.bit{display:flex;flex-direction:column;align-items:center;gap:6px;padding:10px 0;border-radius:12px;border:2px solid var(--line);background:var(--sf);box-shadow:0 3px 0 var(--line);cursor:pointer;font-family:'JetBrains Mono',monospace;color:var(--ink)}
+.bit .w{font-size:.72rem;color:var(--ink2)}.bit .v{font-size:1.45rem;font-weight:700}
+.bit.on{background:var(--u);color:var(--ui);border-color:var(--u);box-shadow:0 3px 0 color-mix(in srgb,var(--u) 62%,#000)}.bit.on .w{color:inherit;opacity:.85}
+.sum{text-align:center;font:700 1.15rem 'JetBrains Mono',monospace;color:var(--ink2)}.sum b{color:var(--ink)}
+.mtc{display:grid;grid-template-columns:1fr 1fr;gap:10px 12px}
+.mtc .opt{margin:0;padding:12px 12px;font-size:.93rem;min-height:58px;align-items:center}
+.mtc .opt.done{border-color:var(--ok);background:var(--okbg);box-shadow:0 3px 0 var(--ok);opacity:.75}
+.mtc .opt.shake{animation:shake .3s;border-color:var(--bad);background:var(--badbg)}
+@keyframes shake{25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
+.zone{min-height:66px;border:2px dashed var(--line);border-radius:14px;padding:10px;display:flex;flex-wrap:wrap;gap:8px;margin-bottom:18px;align-content:flex-start}
+.pool{display:flex;flex-wrap:wrap;gap:8px}
+.chip2{font:600 .95rem 'Figtree',sans-serif;background:var(--sf);border:2px solid var(--line);box-shadow:0 3px 0 var(--line);border-radius:12px;padding:9px 13px;cursor:pointer;color:var(--ink);text-align:left}
+.zone .chip2{border-color:var(--u)}
+.l-foot{flex:none;border-top:2px solid var(--line);background:var(--sf);padding:14px 16px calc(14px + env(safe-area-inset-bottom,0px))}
+.foot-in{max-width:720px;margin:0 auto}
+.l-foot.good{background:var(--okbg);border-color:var(--ok)}.l-foot.bad{background:var(--badbg);border-color:var(--bad)}
+.fb{margin-bottom:12px}.fb strong{display:block;font:800 1.2rem 'Bricolage Grotesque',sans-serif}
+.good .fb strong{color:var(--ok)}.bad .fb strong{color:var(--bad)}
+.fb .ans{font-weight:600;margin-top:2px;overflow-wrap:anywhere}.fb p{margin-top:4px;font-size:.95rem;overflow-wrap:anywhere}
+.good .btn{background:var(--ok);color:#fff;box-shadow:0 4px 0 color-mix(in srgb,var(--ok) 60%,#000)}
+.bad .btn{background:var(--bad);color:#fff;box-shadow:0 4px 0 color-mix(in srgb,var(--bad) 60%,#000)}
+.end{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:24px;gap:10px;max-width:520px;margin:0 auto;width:100%}
+.end h1{font-size:2rem;font-weight:800}
+.bigst{display:flex;gap:6px;margin:6px 0}.bigst svg{width:54px;height:54px;color:var(--line)}.bigst .on svg{color:var(--yellow)}
+.res{display:flex;gap:12px;margin:10px 0 18px}.res div{background:var(--sf);border:2px solid var(--line);border-radius:14px;padding:10px 18px;min-width:120px}
+.res b{display:block;font:800 1.5rem 'Bricolage Grotesque',sans-serif}.res span{font-size:.85rem;color:var(--ink2)}
+.end .btn{width:100%;max-width:340px}.end .btn+.btn{margin-top:8px}
+.modal{position:absolute;inset:0;background:rgba(10,16,30,.55);display:grid;place-items:center;padding:20px;z-index:3}
+.modal>div{background:var(--sf);border-radius:18px;padding:22px;max-width:380px;width:100%;display:flex;flex-direction:column;gap:10px}
+.modal h2{font-size:1.25rem}
+@media (max-width:420px){.les{grid-template-columns:52px 1fr auto;gap:12px}.node{width:52px;height:52px}.les:not(:last-child)::before{left:22px}}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+
+</style>
+</head>
+<body>
+<div id="app"></div>
+<nav id="nav" aria-label="Secciones"><div class="nav-in">
+<button data-tab="ruta" aria-current="page"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 20a2 2 0 1 0 0-4 2 2 0 0 0 0 4zM18 8a2 2 0 1 0 0-4 2 2 0 0 0 0 4zM6 16V9a3 3 0 0 1 3-3h7" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>Ruta</button>
+<button data-tab="repaso"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 12a8 8 0 1 1-2.3-5.6M20 4v4h-4" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>Repaso</button>
+<button data-tab="glosario"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4h10a4 4 0 0 1 4 4v12H9a4 4 0 0 1-4-4V4zM5 16a4 4 0 0 1 4-4h10" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"/></svg>Glosario</button>
+</div></nav>
+<div id="lesson" hidden></div>
+<script>
+/* ===== Constructores de ejercicios ===== */
+const mc=(q,a,w,e='')=>({t:'mc',q,a,w,e});
+const tf=(q,a,e='')=>({t:'tf',q,a,e});
+const mt=(q,p,e='')=>({t:'match',q,p,e});
+const od=(q,s,e='')=>({t:'order',q,s,e});
+const inp=(q,ans,e='',ph='')=>({t:'input',q,ans:Array.isArray(ans)?ans:[ans],e,ph});
+const g=(n,c=1)=>Array(c).fill('g:'+n);
+
+const UNITS=[
+/* ---------- UNIDAD 1 ---------- */
+{id:1,name:'Fundamentos',sub:'Bits, octetos y operadores lógicos',cable:'blue',lessons:[
+{id:'1.1',name:'Unidades de información',sub:'Bit, byte, octeto y decimal',ex:[
+ mc('¿Cuál es la unidad mínima de información en una red?','Bit',['Byte','Octeto','Paquete'],'El bit solo puede valer 0 o 1.'),
+ mc('¿Cuántos bits forman un byte?','8',['4','16','32'],'Un byte agrupa 8 bits.'),
+ mc('En redes, ¿qué es un octeto?','Un grupo de 8 bits',['Un grupo de 8 bytes','Un grupo de 4 bits','Una dirección completa de 32 bits'],'Octeto = 8 bits. Cada bloque de una dirección IPv4 es un octeto.'),
+ mc('¿Cuántos octetos tiene una dirección IPv4?','4',['2','6','8'],'4 octetos × 8 bits = 32 bits.'),
+ mc('¿Cuántos bits tiene una dirección IPv4?','32',['16','48','128'],'4 octetos × 8 bits = 32 bits. (IPv6 tiene 128.)'),
+ mc('¿Qué rango decimal puede tener un octeto?','0 a 255',['1 a 256','0 a 256','1 a 255'],'Con 8 bits hay 2⁸ = 256 valores: del 0 al 255.'),
+ mt('Une cada unidad con su descripción',[['Bit','Puede valer 0 o 1'],['Byte','Conjunto de 8 bits'],['Octeto','Cada uno de los 4 bloques de una IPv4'],['Decimal','Base 10: así se escribe cada octeto (0–255)']]),
+ tf('En redes, byte y octeto se usan como sinónimos: ambos son 8 bits.',true,'Se prefiere «octeto» porque siempre son exactamente 8 bits.'),
+ tf('En la notación punto decimal, los 4 octetos se separan con puntos (192.168.10.1).',true),
+ mc('El octeto `11111111` vale...','255',['256','128','127'],'128+64+32+16+8+4+2+1 = 255.'),
+ ...g('decToBits',2)]},
+{id:'1.2',name:'Binario y decimal',sub:'Convierte octetos a mano',ex:[
+ mc('Pesos de un octeto, de izquierda a derecha','128, 64, 32, 16, 8, 4, 2, 1',['256, 128, 64, 32, 16, 8, 4, 2','1, 2, 3, 4, 5, 6, 7, 8','100, 50, 25, 10, 5, 2, 1, 0'],'Cada posición vale el doble que la de su derecha.'),
+ mc('¿Qué decimal es `10000000`?','128',['64','256','100'],'Solo está activo el bit de peso 128.'),
+ mc('¿Cuál es el binario de 255?','11111111',['11111110','10000000','01111111'],'Todos los bits en 1.'),
+ mc('¿Qué decimal es `10101000`?','168',['172','160','170'],'128 + 32 + 8 = 168 (el 2.º octeto de 192.168.x.x).'),
+ mc('¿Cuál es el binario de 192?','11000000',['10000000','11100000','10110000'],'192 = 128 + 64.'),
+ tf('Un octeto con todos los bits en 1 vale 255.',true),
+ tf('Un octeto con todos los bits en 0 vale 255.',false,'Vale 0.'),
+ ...g('binToDec',3),...g('decToBits',3)]},
+{id:'1.3',name:'Operadores lógicos',sub:'AND, OR, NOT y XOR',ex:[
+ mc('El operador AND da 1 solo cuando...','ambos bits son 1',['al menos un bit es 1','los bits son distintos','el bit es 0'],'1 AND 1 = 1; cualquier otra combinación da 0.'),
+ mc('El operador OR da 1 cuando...','al menos uno de los bits es 1',['ambos bits son 1','los bits son distintos','ambos bits son 0'],'Solo 0 OR 0 da 0.'),
+ mc('El operador NOT...','invierte el bit (0→1, 1→0)',['da 1 si los bits son iguales','da 1 solo si ambos son 1','suma los bits'],''),
+ mc('El operador XOR da 1 cuando...','los dos bits son diferentes',['los dos bits son iguales','ambos son 1','ambos son 0'],'1 XOR 1 = 0 y 0 XOR 0 = 0.'),
+ mc('¿Qué operación se usa para obtener la dirección de red?','IP AND máscara',['IP OR máscara','IP XOR máscara','NOT IP'],'Los bits de host se vuelven 0 y los de red se conservan.'),
+ mt('Une cada operador con su comportamiento',[['AND','Da 1 solo si ambos son 1'],['OR','Da 0 solo si ambos son 0'],['XOR','Da 1 si los bits son distintos'],['NOT','Invierte el bit']]),
+ tf('1 XOR 1 = 1',false,'Bits iguales → 0.'),
+ tf('0 OR 0 = 0',true),
+ tf('Hacer AND con un bit en 0 siempre da 0.',true,'Por eso los 0 de la máscara «borran» los bits de host.'),
+ ...g('logic',5)]}
+]},
+/* ---------- UNIDAD 2 ---------- */
+{id:2,name:'Quién asigna qué',sub:'IANA, RIR y DNS',cable:'yellow',lessons:[
+{id:'2.1',name:'IANA y los RIR',sub:'Jerarquía de asignación',ex:[
+ mc('¿Qué organismo administra globalmente el espacio de direcciones IP?','IANA',['LACNIC','Un ISP','El DNS'],'IANA reparte grandes bloques a los RIR.'),
+ mc('¿Quién recibe bloques de IANA y los asigna a ISP y organizaciones de su región?','Un RIR',['El DNS','El Gateway','El usuario final'],''),
+ mc('¿Qué significa RIR?','Regional Internet Registry',['Routing Internet Resolver','Remote IP Router','Regional IP Repeater'],'Registro regional de Internet.'),
+ mt('Une cada RIR con su región',[['ARIN','Norteamérica'],['LACNIC','Latinoamérica y Caribe'],['RIPE NCC','Europa y Medio Oriente'],['APNIC','Asia-Pacífico'],['AFRINIC','África']]),
+ mc('¿Qué RIR atiende a México?','LACNIC',['ARIN','RIPE NCC','APNIC'],'LACNIC cubre Latinoamérica y el Caribe.'),
+ od('Ordena la jerarquía de asignación de direcciones, de arriba hacia abajo',['IANA','RIR','ISP / LIR','Organización','Usuario final'],'IANA → RIR → ISP → Organización → Usuario final.'),
+ tf('Un usuario final recibe sus direcciones directamente de IANA.',false,'Las recibe de su ISP u organización.'),
+ tf('Los RIR reparten direcciones a ISP y organizaciones de su región.',true),
+ mc('¿Cuántos RIR existen?','5',['3','4','7'],'ARIN, LACNIC, RIPE NCC, APNIC y AFRINIC.'),
+ mc('AFRINIC es el registro regional de...','África',['Asia-Pacífico','Europa','Sudamérica'],'')]},
+{id:'2.2',name:'DNS',sub:'De nombres a direcciones IP',ex:[
+ mc('¿Qué hace el DNS?','Traduce nombres de dominio a direcciones IP',['Asigna direcciones IP automáticamente','Traduce IP privadas a públicas','Calcula rutas entre redes'],'Ej.: www.ejemplo.com → 93.184.216.34.'),
+ mc('¿Qué puerto usa el DNS?','53',['80','25','443'],'UDP/TCP 53.'),
+ mc('DNS significa...','Domain Name System',['Dynamic Network Service','Data Name Server','Domain Node Switch'],''),
+ tf('El DNS es una base de datos distribuida y jerárquica.',true),
+ od('Ordena la jerarquía del DNS, de mayor a menor',['Raíz','TLD (.com, .mx)','Dominio (ejemplo)','Subdominio (www)'],'Raíz → TLD → dominio → subdominio.'),
+ mc('Escribes www.ejemplo.com en el navegador. ¿Qué te devuelve el DNS?','La dirección IP del servidor',['La MAC del router','La máscara de subred','El número de saltos'],''),
+ tf('Sin DNS sería imposible conectarse a un servidor usando su IP.',false,'Se puede; el DNS solo evita memorizar IPs.'),
+ mc('¿Qué es un TLD?','Dominio de nivel superior, como .com o .mx',['Un tipo de dirección IP','Un protocolo de transporte','Un servidor de correo'],''),
+ tf('El DNS también puede resolver de IP a nombre (resolución inversa).',true)]}
+]},
+/* ---------- UNIDAD 3 ---------- */
+{id:3,name:'Direccionamiento IPv4',sub:'Red, host, clases, públicas, privadas y reservadas',cable:'green',lessons:[
+{id:'3.1',name:'Red, host y broadcast',sub:'Las tres direcciones clave',ex:[
+ mc('Una dirección IPv4 se divide en...','parte de red y parte de host',['parte de clase y parte de puerto','parte pública y parte privada','parte de MAC y parte lógica'],''),
+ mc('¿Qué define dónde termina la parte de red?','La máscara de subred',['El Gateway','El DNS','El TTL'],''),
+ mc('La dirección de red (Network ID) tiene...','todos los bits de host en 0',['todos los bits de host en 1','todos los bits de red en 0','solo el último bit en 1'],'Ej.: 192.168.10.0'),
+ mc('La dirección de broadcast tiene...','todos los bits de host en 1',['todos los bits de host en 0','todos los bits de red en 1','el primer bit de host en 1'],'Ej.: 192.168.10.255'),
+ inp('En `192.168.10.0/24`, ¿cuál es la dirección de broadcast?','192.168.10.255','Último valor del rango: host todo en 1.','0.0.0.0'),
+ inp('¿Cuántos hosts utilizables tiene `192.168.10.0/24`?','254','2⁸ − 2 = 254.','número'),
+ tf('La dirección de red puede asignarse a una PC.',false,'Identifica a toda la red.'),
+ tf('Una dirección de host es cualquier IP utilizable entre la de red y la de broadcast.',true),
+ mc('En `192.168.10.0/24`, ¿cuál es el rango de hosts?','.1 a .254',['.0 a .255','.1 a .255','.0 a .254'],''),
+ mt('Une cada dirección con su función',[['Network ID','Identifica a la red (bits de host en 0)'],['Dirección de host','Identifica a un dispositivo'],['Broadcast','Llega a todos los hosts (bits de host en 1)']]),
+ ...g('netId',2)]},
+{id:'3.2',name:'Clases de IP',sub:'A, B, C, D y E',ex:[
+ mt('Une cada clase con el rango de su primer octeto',[['Clase A','1 – 126'],['Clase B','128 – 191'],['Clase C','192 – 223'],['Clase D','224 – 239'],['Clase E','240 – 255']]),
+ mc('Máscara por defecto de la clase B','255.255.0.0',['255.0.0.0','255.255.255.0','255.255.255.255'],''),
+ mc('Máscara por defecto de la clase C','255.255.255.0',['255.255.0.0','255.0.0.0','255.255.255.128'],''),
+ mc('Máscara por defecto de la clase A','255.0.0.0',['255.255.0.0','255.255.255.0','0.0.0.0'],''),
+ mc('¿Qué clase se reserva para multicast?','Clase D',['Clase A','Clase C','Clase E'],'224.0.0.0 – 239.255.255.255.'),
+ mc('La clase E es...','Experimental / reservada',['Para redes pequeñas','Para multicast','Para redes muy grandes'],''),
+ mc('Una red con unos 60,000 hosts encaja mejor en la clase...','B',['A','C','D'],'La clase B admite hasta 65,534 hosts.'),
+ tf('El bloque 127.x.x.x pertenece a la clase B.',false,'Es de la clase A, pero está reservado para loopback.'),
+ mc('¿Cuántos hosts por red admite la clase C?','254',['65,534','16,777,214','1,022'],'2⁸ − 2.'),
+ mc('¿Cuántos hosts por red admite la clase A?','16,777,214',['65,534','254','1,048,574'],'2²⁴ − 2.'),
+ mc('Los bits iniciales de una dirección clase A son...','0',['10','110','1110'],'B = 10, C = 110, D = 1110.'),
+ ...g('class',4)]},
+{id:'3.3',name:'IP pública y privada',sub:'Rangos RFC 1918',ex:[
+ mc('¿Qué tipo de IP es enrutable en Internet?','Pública',['Privada','Loopback','APIPA'],''),
+ mt('Une cada rango privado con su clase',[['10.0.0.0/8','Clase A privada'],['172.16.0.0/12','Clase B privada'],['192.168.0.0/16','Clase C privada']]),
+ mc('¿Quién asigna las IP públicas?','El ISP (con bloques de un RIR)',['El administrador de la LAN','El DNS','El propio equipo'],''),
+ tf('Las IP privadas pueden reutilizarse en distintas redes locales.',true,'Por eso son gratuitas y no son únicas en el mundo.'),
+ mc('¿Qué necesita una IP privada para salir a Internet?','NAT / PAT',['DNS','APIPA','Broadcast'],''),
+ mc('Rango privado de clase B','172.16.0.0 – 172.31.255.255',['172.0.0.0 – 172.255.255.255','172.16.0.0 – 172.16.255.255','172.16.0.0 – 172.63.255.255'],'Es el bloque 172.16.0.0/12.'),
+ tf('172.32.0.1 es una IP privada.',false,'El rango privado solo llega hasta 172.31.x.x.'),
+ tf('Las IP públicas son únicas en Internet.',true),
+ mc('Una ventaja de las IP privadas es que...','son gratuitas y ahorran direcciones públicas',['se enrutan directamente en Internet','son únicas en todo el mundo','las asigna IANA'],''),
+ ...g('pubPriv',4)]},
+{id:'3.4',name:'IPs reservadas',sub:'Loopback, link-local, APIPA y más',ex:[
+ mc('Rango de loopback','127.0.0.0/8',['169.254.0.0/16','224.0.0.0/4','10.0.0.0/8'],'Normalmente se usa 127.0.0.1 (localhost).'),
+ mc('Dirección de broadcast local (limitado)','255.255.255.255',['192.168.255.255','127.255.255.255','0.0.0.0'],'Llega a todos los hosts de la red local.'),
+ mc('Rango APIPA / link-local','169.254.0.0/16',['127.0.0.0/8','192.168.0.0/16','224.0.0.0/4'],''),
+ mc('¿Cuándo un equipo se autoasigna una IP 169.254.x.x?','Cuando no encuentra un servidor DHCP',['Cuando hay un conflicto de DNS','Cuando se conecta a Internet','Cuando usa NAT'],''),
+ tf('Los routers reenvían el broadcast local 255.255.255.255 a otras redes.',false,'Se queda en la red local.'),
+ mt('Une cada IP reservada con su uso',[['Red (Network ID)','Bits de host en 0: identifica la red'],['Broadcast dirigido','Bits de host en 1: a todos los hosts de una red'],['Broadcast local','255.255.255.255: solo la red local'],['Loopback','127.0.0.1: prueba del propio equipo'],['Link-local / APIPA','169.254.0.0/16: sin servidor DHCP']]),
+ mc('¿Qué comando prueba tu propia pila TCP/IP?','ping 127.0.0.1',['ping 255.255.255.255','ping 169.254.0.1','ping 0.0.0.0'],''),
+ mc('Una dirección link-local solo funciona...','en el segmento de red local',['en toda Internet','solo dentro de una VPN','solo con NAT'],''),
+ mc('`0.0.0.0` representa...','una dirección no especificada / ruta por defecto',['el broadcast local','el loopback','una IP privada'],''),
+ mc('APIPA es la implementación de direccionamiento link-local de...','Microsoft',['Cisco','Linux','Apple'],''),
+ ...g('reserved',3)]},
+{id:'3.5',name:'Tipos de direccionamiento',sub:'Unicast, multicast, anycast y broadcast',ex:[
+ mt('Une cada tipo con su relación',[['Unicast','1 → 1'],['Multicast','1 → un grupo'],['Broadcast','1 → todos'],['Anycast','1 → el más cercano']]),
+ mc('Un PC envía un archivo a un servidor específico. ¿Qué tipo es?','Unicast',['Multicast','Broadcast','Anycast'],'Un origen, un destino.'),
+ mc('Una transmisión de video llega solo a los equipos suscritos al grupo. ¿Qué tipo es?','Multicast',['Unicast','Broadcast','Anycast'],'Usa direcciones clase D (224.0.0.0/4).'),
+ mc('Un aviso que recibe todo equipo de la red local. ¿Qué tipo es?','Broadcast',['Unicast','Multicast','Anycast'],''),
+ mc('La misma IP está en varios servidores y el paquete llega al más cercano. ¿Qué tipo es?','Anycast',['Unicast','Multicast','Broadcast'],''),
+ mc('IPv4 usa multicast en la clase...','D',['A','B','E'],''),
+ tf('IPv6 no utiliza broadcast.',true,'Lo reemplaza con multicast.'),
+ tf('En anycast, el paquete llega a todos los nodos que comparten la IP.',false,'Solo llega al más cercano.'),
+ mc('El broadcast local llega a...','todos los hosts de la red local',['un solo host','solo a un grupo suscrito','al nodo más cercano'],''),
+ tf('Unicast es comunicación uno a uno.',true)]}
+]},
+/* ---------- UNIDAD 4 ---------- */
+{id:4,name:'Máscara y Gateway',sub:'Separar la red y salir de ella',cable:'red',lessons:[
+{id:'4.1',name:'Máscara de subred',sub:'Decimal y prefijo /n',ex:[
+ mc('En una máscara de subred, los bits en 1 indican...','la parte de red',['la parte de host','el número de puerto','la clase'],''),
+ mc('En una máscara de subred, los bits en 0 indican...','la parte de host',['la parte de red','el broadcast','el gateway'],''),
+ mc('La notación `/26` indica...','26 bits en 1 (de red)',['26 hosts','26 subredes','26 bits de host'],''),
+ mc('¿Cuántos bits en 1 tiene `255.255.255.0`?','24',['8','16','32'],'Tres octetos completos: 3 × 8.'),
+ mc('`255.255.255.240` equivale a...','/28',['/26','/27','/29'],'240 = 11110000 → 4 bits extra sobre /24.'),
+ mc('La máscara `/16` es...','255.255.0.0',['255.0.0.0','255.255.255.0','255.255.255.128'],''),
+ tf('La máscara `255.0.255.0` es válida.',false,'Los bits en 1 deben ser contiguos, sin huecos.'),
+ ...g('cidrToMask',3),...g('maskToCidr',3)]},
+{id:'4.2',name:'Gateway y Default Gateway',sub:'La puerta hacia otras redes',ex:[
+ mc('¿Qué es el Default Gateway?','La IP del router que da salida hacia otras redes',['La IP del servidor DNS','La dirección de broadcast','La máscara de subred'],''),
+ mc('Un host envía el paquete a su gateway cuando el destino...','está en otra red',['está en su misma red','es su propia IP','es un broadcast local'],''),
+ tf('El gateway debe estar en la misma subred que el host.',true),
+ mc('El dispositivo que normalmente actúa como gateway es un...','router',['switch','repetidor','hub'],''),
+ mc('Si el gateway está mal configurado, el host...','se comunica en su red pero no con otras',['no se comunica con nadie','pierde su dirección IP','no puede usar DNS en su red'],''),
+ mc('Una dirección típica de gateway es...','la primera o la última IP utilizable (ej. 192.168.1.1)',['la dirección de red','la dirección de broadcast','cualquier IP de otra red'],''),
+ tf('El Default Gateway es la dirección de red.',false),
+ mt('Une cada concepto con su función',[['Gateway','Dispositivo que interconecta redes distintas'],['Default Gateway','IP configurada en el host para salir de su red'],['Máscara de subred','Separa la parte de red y de host'],['DNS','Traduce nombres a IP']]),
+ ...g('gateway',3)]},
+{id:'4.3',name:'Dirección de red con AND',sub:'IP AND máscara',ex:[
+ mc('¿Cómo se obtiene la dirección de red?','IP AND máscara',['IP OR máscara','IP XOR máscara','IP + máscara'],''),
+ mc('¿Cómo se obtiene el broadcast?','Poniendo en 1 todos los bits de host',['Poniendo en 0 todos los bits de host','Sumando 1 a la red','Haciendo NOT a la IP'],''),
+ inp('Calcula `192.168.10.77` AND `255.255.255.0`','192.168.10.0','Los octetos con máscara 255 se conservan; el resto pasa a 0.','0.0.0.0'),
+ inp('Calcula `10.45.3.200` AND `255.0.0.0`','10.0.0.0','','0.0.0.0'),
+ inp('Calcula `172.16.50.9` AND `255.255.0.0`','172.16.0.0','','0.0.0.0'),
+ mc('Cualquier bit AND 0 da...','0',['1','el mismo bit','depende'],''),
+ tf('Cualquier bit AND 1 conserva el bit original.',true),
+ ...g('netId',5)]}
+]},
+/* ---------- UNIDAD 5 ---------- */
+{id:5,name:'Subnetting, CIDR y VLSM',sub:'Dividir redes con precisión',cable:'purple',lessons:[
+{id:'5.1',name:'Subnetting y sus fórmulas',sub:'2ˣ subredes y 2ʸ − 2 hosts',ex:[
+ mc('¿Qué es el subnetting?','Dividir una red en subredes más pequeñas',['Unir varias redes en una','Traducir IP privadas a públicas','Asignar nombres a las IP'],''),
+ mc('Una ventaja del subnetting es...','menos tráfico de broadcast y mejor organización',['más direcciones por red','eliminar la máscara','no necesitar router'],'También mejora la seguridad y el aprovechamiento de direcciones.'),
+ mc('Fórmula para calcular las subredes','2ˣ (x = bits prestados)',['2ʸ − 2','256 − máscara','x² − 2'],''),
+ mc('Fórmula para calcular los hosts utilizables','2ʸ − 2 (y = bits de host)',['2ˣ','2ʸ + 2','y × 2'],''),
+ mc('¿Por qué se restan 2 en la fórmula de hosts?','La dirección de red y la de broadcast no se asignan',['Se reservan para DNS y gateway','Son IP de loopback','Se pierden por el NAT'],''),
+ tf('Al prestar más bits aumentan las subredes y disminuyen los hosts por subred.',true),
+ mc('Los bits prestados provienen de...','la parte de host',['la parte de red','la clase','el puerto'],''),
+ tf('La fórmula de subredes es 2ʸ − 2.',false,'Es 2ˣ; 2ʸ − 2 es la de hosts.'),
+ ...g('hosts',3),...g('subnets',3)]},
+{id:'5.2',name:'Procedimiento de subnetting',sub:'Paso a paso y salto',ex:[
+ od('Ordena el procedimiento de subnetting',['Identificar la red original y su máscara','Determinar cuántas subredes o hosts se necesitan','Calcular los bits a prestar (2ˣ) o de host (2ʸ − 2)','Obtener la nueva máscara','Calcular el salto y listar red, hosts y broadcast'],''),
+ mc('¿Cómo se calcula el salto (incremento)?','256 − valor del octeto de la máscara',['256 + valor del octeto','2ˣ − 2','máscara ÷ 2'],'Ej.: /26 → 256 − 192 = 64.'),
+ od('Para cada subred, lista los datos en este orden',['Network ID','Primer host','Último host','Broadcast'],''),
+ tf('El broadcast de una subred es la última dirección de su rango.',true),
+ mc('Al dividir 192.168.10.0/24 en /26, la 2.ª subred inicia en...','192.168.10.64',['192.168.10.62','192.168.10.128','192.168.10.65'],'El salto es 64: .0, .64, .128, .192.'),
+ ...g('jump',3),...g('split',4)]},
+{id:'5.3',name:'Práctica: red, hosts y broadcast',sub:'Ejercicios de subnetting completos',ex:[
+ ...g('subnetQ',8),...g('jump',2),...g('netId',2)]},
+{id:'5.4',name:'CIDR',sub:'Direccionamiento sin clases',ex:[
+ mc('CIDR significa...','Classless Inter-Domain Routing',['Class Internet Domain Resolver','Central IP Domain Routing','Classful Inter-Domain Range'],''),
+ mc('CIDR elimina...','la rigidez de las clases A, B y C',['la necesidad de máscara','el uso de routers','el DNS'],''),
+ mc('La notación CIDR se escribe como...','IP/prefijo (ej. 200.10.5.0/22)',['IP:máscara','IP-clase','IP#puerto'],''),
+ mc('Agrupar varias redes en una sola ruta (supernetting / sumarización) permite...','reducir el tamaño de las tablas de enrutamiento',['aumentar los broadcast','cambiar la IP de los hosts','eliminar el NAT'],''),
+ tf('CIDR ayudó a frenar el agotamiento de direcciones IPv4.',true),
+ tf('CIDR obliga a usar solo prefijos /8, /16 o /24.',false,'Permite longitudes variables de prefijo.'),
+ mc('Un prefijo /22 agrupa cuántas redes /24','4',['2','8','16'],'/24 − /22 = 2 bits → 2² = 4.'),
+ mt('Une cada prefijo con su máscara',[['/22','255.255.252.0'],['/20','255.255.240.0'],['/18','255.255.192.0'],['/12','255.240.0.0']]),
+ ...g('hosts',2),...g('cidrToMask',2)]},
+{id:'5.5',name:'VLSM',sub:'Máscaras de distinto tamaño',ex:[
+ mc('VLSM permite...','usar máscaras de distinto tamaño dentro de una misma red',['usar una sola máscara en toda la red','eliminar las subredes','traducir IP privadas'],''),
+ mc('Regla práctica de VLSM: asignar primero...','la subred más grande',['la subred más pequeña','la subred del gateway','la última subred'],''),
+ tf('VLSM desperdicia más direcciones que usar una máscara fija.',false,'Ajusta cada subred a los hosts que realmente necesita.'),
+ od('Ordena el proceso VLSM',['Listar los requerimientos de hosts de mayor a menor','Calcular el prefijo de cada subred (2ʸ − 2 ≥ hosts)','Asignar la subred más grande desde el inicio del bloque','Iniciar cada subred siguiente tras el broadcast de la anterior'],''),
+ mc('En `192.168.1.0/24`, una subred de 100 hosts necesita el prefijo...','/25',['/24','/26','/27'],'2⁷ − 2 = 126 ≥ 100.'),
+ ...g('vlsmPrefix',5),...g('vlsmNext',3)]}
+]},
+/* ---------- UNIDAD 6 ---------- */
+{id:6,name:'NAT y PAT',sub:'Salir a Internet con IP privadas',cable:'orange',lessons:[
+{id:'6.1',name:'NAT',sub:'Traducción de direcciones',ex:[
+ mc('¿Qué hace NAT?','Traduce IP privadas a públicas (y viceversa)',['Traduce nombres a IP','Asigna IP por DHCP','Divide redes en subredes'],''),
+ mc('NAT se configura normalmente en un...','router o firewall',['switch','hub','cable'],''),
+ mt('Une cada tipo de NAT con su descripción',[['NAT estático','Relación 1 a 1 fija'],['NAT dinámico','Toma IP públicas de un pool'],['PAT','Muchas IP privadas comparten una pública']]),
+ tf('NAT oculta la estructura de la red interna.',true),
+ mc('Una ventaja de NAT es que...','ahorra direcciones IPv4 públicas',['elimina el DNS','aumenta el tamaño de la máscara','reemplaza al gateway'],''),
+ mc('En NAT estático, una IP privada siempre se traduce a...','la misma IP pública',['cualquier IP del pool','la IP del gateway','una IP APIPA'],''),
+ tf('Una IP privada puede enrutarse directamente por Internet sin NAT.',false),
+ mc('El NAT dinámico usa...','un pool de IP públicas',['un único puerto','solo IP clase D','direcciones APIPA'],'')]},
+{id:'6.2',name:'PAT',sub:'NAT overload con puertos',ex:[
+ mc('PAT también se conoce como...','NAT overload',['NAT estático','NAT inverso','Proxy DNS'],''),
+ mc('En PAT, ¿qué diferencia las conexiones de los distintos hosts?','El número de puerto',['La máscara de subred','El TTL','La clase de IP'],''),
+ tf('PAT permite que muchos hosts compartan una sola IP pública.',true),
+ mc('¿Qué usa normalmente un router doméstico?','PAT',['NAT estático','Anycast','VLSM'],''),
+ mc('PAT significa...','Port Address Translation',['Private Address Table','Packet Access Translation','Public Address Transfer'],''),
+ mc('`192.168.1.10:50001 → 200.1.1.5:40001` y `192.168.1.11:50002 → 200.1.1.5:40002`. ¿Qué tienen en común?','La misma IP pública, con puertos distintos',['La misma IP privada','El mismo puerto','Distinta IP pública'],''),
+ tf('En PAT cada host necesita su propia IP pública.',false),
+ mc('¿Cuál de estos necesita más IP públicas?','NAT estático',['PAT','Ninguno','Todos por igual'],'1 IP pública por cada IP privada traducida.')]}
+]},
+/* ---------- UNIDAD 7 ---------- */
+{id:7,name:'Comunicación IP',sub:'Entrega directa e indirecta',cable:'teal',lessons:[
+{id:'7.1',name:'Entrega directa vs. indirecta',sub:'¿Mismo red o pasa por el gateway?',ex:[
+ mc('La entrega directa ocurre cuando...','origen y destino están en la misma red',['el destino está en Internet','hay un router intermedio','se usa NAT'],''),
+ mc('En la entrega indirecta, el paquete se envía primero al...','Default Gateway (router)',['servidor DNS','broadcast local','host destino'],''),
+ mc('¿Cómo decide un host si la entrega es directa o indirecta?','Hace IP AND máscara a ambas IP y compara',['Consulta al DNS','Envía un ping','Compara la clase de las IP'],''),
+ tf('En la entrega directa se resuelve la MAC del destino con ARP.',true),
+ tf('En la entrega indirecta el paquete pasa por uno o más routers.',true),
+ mc('Si origen AND máscara ≠ destino AND máscara, la entrega es...','indirecta',['directa','broadcast','loopback'],''),
+ mc('`192.168.1.10/24` envía a `192.168.1.50`. La entrega es...','directa',['indirecta','anycast','imposible'],'Ambas están en 192.168.1.0/24.'),
+ mc('`192.168.1.10/24` envía a `8.8.8.8`. La entrega es...','indirecta',['directa','broadcast','loopback'],'8.8.8.8 está fuera de la red local.'),
+ ...g('delivery',6)]}
+]},
+/* ---------- UNIDAD 8 ---------- */
+{id:8,name:'ICMP y diagnóstico',sub:'Ping, traceroute y checksum',cable:'pink',lessons:[
+{id:'8.1',name:'Paquetes ICMP',sub:'Mensajes de control y error',ex:[
+ mc('¿Qué es ICMP?','Un protocolo de mensajes de control y error',['Un protocolo para transferir archivos','Un servicio de nombres','Un tipo de máscara'],''),
+ mt('Une cada tipo de mensaje ICMP con su significado',[['Tipo 0','Echo Reply'],['Tipo 3','Destino inalcanzable'],['Tipo 8','Echo Request'],['Tipo 11','Tiempo excedido']]),
+ tf('ICMP transporta datos de las aplicaciones del usuario.',false,'Solo transporta mensajes de control y error.'),
+ mc('ICMP opera en la capa de...','red',['aplicación','enlace de datos','física'],''),
+ mc('¿Qué mensaje ICMP se genera cuando el TTL llega a 0?','Time Exceeded (tipo 11)',['Echo Reply (tipo 0)','Echo Request (tipo 8)','Destination Unreachable (tipo 3)'],''),
+ mc('¿Qué mensaje responde a un ping?','Echo Reply',['Echo Request','Time Exceeded','Destination Unreachable'],''),
+ mc('Un router no encuentra ruta hacia el destino y avisa con...','Destination Unreachable',['Echo Reply','Echo Request','Time Exceeded'],''),
+ tf('ICMP es la base de las herramientas ping y traceroute.',true)]},
+{id:'8.2',name:'Ping y traceroute',sub:'Herramientas de diagnóstico',ex:[
+ mc('¿Para qué sirve `ping`?','Verificar la conectividad con otro host',['Mostrar la ruta completa','Traducir nombres','Asignar una IP'],'Muestra latencia, TTL y pérdida de paquetes.'),
+ mc('`ping` usa mensajes ICMP de tipo...','Echo Request y Echo Reply',['Time Exceeded','Redirect','Source Quench'],''),
+ mc('Comando de Windows para ver la ruta a un destino','tracert',['traceroute','netstat','ipconfig'],'En Linux/macOS es `traceroute`.'),
+ mc('Comando de Linux/macOS para ver la ruta a un destino','traceroute',['tracert','ping -r','route'],''),
+ mc('`traceroute` descubre los saltos incrementando...','el TTL',['el puerto','la máscara','el checksum'],'Cada router que lo descarta responde con ICMP Time Exceeded.'),
+ mc('`ping 127.0.0.1` prueba...','la pila TCP/IP local',['el gateway','el servidor DNS','Internet'],''),
+ tf('`ping` muestra el tiempo de respuesta (latencia) y la pérdida de paquetes.',true),
+ mc('Cada línea (salto) que muestra traceroute representa...','un router en el camino',['un hub','un servidor DNS','un puerto'],''),
+ mt('Une cada comando con su función',[['ping','Prueba conectividad y latencia'],['tracert / traceroute','Muestra la ruta salto a salto'],['ping 127.0.0.1','Prueba la pila TCP/IP local']])]},
+{id:'8.3',name:'Checksum',sub:'Detección de errores',ex:[
+ mc('¿Para qué sirve el checksum?','Detectar errores de transmisión',['Cifrar el paquete','Asignar direcciones','Elegir la ruta'],''),
+ mc('Si el checksum recalculado no coincide, el receptor...','descarta el paquete',['lo corrige solo','lo reenvía a otra red','lo acepta igual'],''),
+ tf('El encabezado IPv4 incluye un checksum.',true),
+ tf('El encabezado IPv6 incluye un checksum.',false,'IPv6 lo eliminó para agilizar el procesamiento.'),
+ mc('¿Qué protocolos usan checksum?','IPv4, ICMP, TCP y UDP',['Solo TCP','Solo ICMP','Solo IPv6'],''),
+ mc('¿Quién calcula el checksum?','El emisor, que lo incluye en el paquete',['El router','El servidor DNS','El switch'],'El receptor lo recalcula y compara.'),
+ tf('El checksum corrige automáticamente los errores detectados.',false,'Solo los detecta.'),
+ mc('¿Por qué IPv6 eliminó el checksum del encabezado?','Para agilizar el procesamiento',['Porque ya no hay errores','Porque lo reemplaza el DNS','Porque usa broadcast'],'')]}
+]},
+/* ---------- UNIDAD 9 ---------- */
+{id:9,name:'IPv6',sub:'128 bits, formatos y tipos',cable:'indigo',lessons:[
+{id:'9.1',name:'IPv6 y formato preferido',sub:'8 grupos de 4 dígitos hexadecimales',ex:[
+ mc('¿Cuántos bits tiene una dirección IPv6?','128',['32','64','256'],''),
+ mc('¿Cómo se escribe una dirección IPv6?','8 grupos de 16 bits en hexadecimal, separados por «:»',['4 octetos decimales separados por puntos','6 grupos de 8 bits','2 mitades de 64 bits en decimal'],''),
+ mc('¿Cuántos dígitos hexadecimales tiene cada grupo en el formato preferido?','4',['2','8','16'],'4 dígitos hex × 4 bits = 16 bits por grupo.'),
+ mc('El formato preferido de IPv6 es...','los 8 grupos de 4 dígitos, sin abreviar',['el más corto posible','el que usa «::»','el que omite ceros iniciales'],'Ej.: 2001:0db8:0000:0000:0000:ff00:0042:8329'),
+ tf('IPv6 usa broadcast.',false,'Usa multicast y anycast.'),
+ tf('IPv6 admite autoconfiguración de direcciones.',true),
+ mc('IPv6 ofrece aproximadamente...','3.4 × 10³⁸ direcciones',['4.3 × 10⁹ direcciones','1 millón de direcciones','2⁶⁴ direcciones en total'],''),
+ mc('¿Cuál es una dirección IPv6 válida en formato preferido?','2001:0db8:0000:0000:0000:ff00:0042:8329',['2001:0db8:0000:0000:0000:ff00:0042:8329:0001','2001:0db8:0000:0000:0000:gf00:0042:8329','2001:0db8:00000:0000:0000:ff00:0042:8329'],'Las otras tienen 9 grupos, un carácter no hexadecimal («g») y un grupo de 5 dígitos.'),
+ mc('¿Cuántos bits tiene cada grupo de una IPv6?','16',['8','32','4'],''),
+ mc('¿Cuántos grupos tiene una IPv6?','8',['4','6','16'],'')]},
+{id:'9.2',name:'Formato comprimido',sub:'Ceros iniciales y dos puntos dobles',ex:[
+ mc('Regla 1 de compresión IPv6','Omitir los ceros iniciales de cada grupo',['Omitir los ceros finales de cada grupo','Omitir todos los grupos','Cambiar hexadecimal por decimal'],''),
+ mc('Regla 2 de compresión IPv6','Reemplazar una secuencia contigua de grupos de ceros por «::»',['Reemplazar cualquier cero por «::»','Quitar el primer grupo','Duplicar los grupos de ceros'],''),
+ tf('El «::» puede usarse varias veces en la misma dirección.',false,'Solo una vez.'),
+ mc('¿Por qué «::» solo puede usarse una vez?','No se sabría cuántos ceros representa cada uno',['Porque ocupa mucho espacio','Porque lo prohíbe el DNS','Porque es broadcast'],''),
+ mc('`::1` es la dirección...','loopback',['no especificada','link-local','multicast'],'Equivale a 127.0.0.1.'),
+ mc('`::` (todo ceros) es la dirección...','no especificada',['loopback','global unicast','broadcast'],''),
+ mc('Al omitir ceros iniciales, el grupo `0db8` queda como...','db8',['d8','0db8','b8'],''),
+ tf('En un grupo como `ff00` se pueden quitar los ceros finales para dejar `ff`.',false,'Solo se quitan los ceros iniciales.'),
+ mc('¿Cuál es la forma comprimida correcta de `2001:0db8:0000:0000:0000:ff00:0042:8329`?','2001:db8::ff00:42:8329',['2001:db8::ff:42:8329','2001:db8::ff00:0042:8329','2001:db8:::ff00:42:8329'],'Se quitan ceros iniciales y los 3 grupos 0000 se reemplazan por «::».'),
+ mc('¿Cuál de estas direcciones NO es válida?','2001::db8::1',['2001:db8::1','fe80::202:b3ff:fe1e:8329','::1'],'Tiene dos «::».'),
+ od('Ordena cómo comprimir una dirección IPv6',['Escribe la dirección en formato preferido','Quita los ceros iniciales de cada grupo','Localiza la secuencia más larga de grupos en 0','Reemplázala por «::» (solo una vez)'],''),
+ ...g('v6rule1',3),...g('v6full',4),...g('v6gap',2),...g('v6expand',2)]},
+{id:'9.3',name:'Tipos de dirección IPv6',sub:'Global, link-local, ULA, multicast...',ex:[
+ mt('Une cada tipo con su prefijo',[['Global unicast','2000::/3'],['Link-local','FE80::/10'],['Unique local (ULA)','FC00::/7'],['Multicast','FF00::/8']]),
+ mc('La dirección loopback de IPv6 es...','::1',['::','FE80::1','FF00::1'],''),
+ mc('Una dirección global unicast equivale a una IPv4...','pública',['privada','loopback','APIPA'],''),
+ mc('Una dirección unique local (ULA) equivale a una IPv4...','privada',['pública','broadcast','multicast'],''),
+ mc('Una dirección link-local IPv6...','se genera automáticamente y solo vale en el enlace local',['es enrutable en Internet','se asigna por el RIR','solo la usa el DNS'],''),
+ mc('IPv6 reemplaza el broadcast por...','multicast',['unicast','anycast únicamente','NAT'],''),
+ mc('En una global unicast, los primeros 64 bits identifican...','la red (prefijo)',['la interfaz','el puerto','el DNS'],'Los últimos 64 bits son el ID de interfaz.'),
+ mc('El prefijo típico de una LAN IPv6 es...','/64',['/32','/48','/128'],''),
+ mc('Estructura global unicast: 48 bits de prefijo global + 16 bits de...','ID de subred',['checksum','clase','puerto'],'Luego 64 bits de ID de interfaz.'),
+ tf('Las direcciones anycast se toman del rango unicast.',true),
+ mc('`FE80::202:B3FF:FE1E:8329` es de tipo...','link-local',['global unicast','multicast','loopback'],'Empieza con FE80::/10.'),
+ mc('`2001:db8::1` es de tipo...','global unicast',['link-local','multicast','ULA'],'Está dentro de 2000::/3.')]},
+{id:'9.4',name:'IPv4 vs. IPv6',sub:'Comparativa rápida',ex:[
+ mt('Une cada característica con su valor',[['IPv4: tamaño','32 bits'],['IPv6: tamaño','128 bits'],['IPv4: notación','Decimal punteada'],['IPv6: notación','Hexadecimal con «:»']]),
+ mc('¿Cuál de los dos usa broadcast?','Solo IPv4',['Solo IPv6','Ambos','Ninguno'],''),
+ mc('¿Cuál incluye checksum en el encabezado?','IPv4',['IPv6','Ambos','Ninguno'],''),
+ tf('IPv6 requiere NAT de forma obligatoria.',false,'Tiene tantas direcciones que NAT no es necesario.'),
+ mc('Autoconfiguración en IPv4','DHCP / APIPA',['SLAAC / DHCPv6','Solo manual','DNS'],''),
+ mc('Autoconfiguración en IPv6','SLAAC / DHCPv6',['DHCP / APIPA','Solo NAT','ARP'],''),
+ mc('IPv6 tiene cuántas veces más bits que IPv4','4 veces',['2 veces','8 veces','16 veces'],'128 ÷ 32 = 4.'),
+ mc('¿Dónde se usa la notación punto decimal?','IPv4',['IPv6','Ambos','Ninguno'],'')]}
+]}
+];
+
+/* ===== Glosario ===== */
+const GLOSS=[
+{t:'Bit',u:1,d:'Unidad mínima de información. Vale 0 o 1.'},
+{t:'Byte',u:1,d:'Conjunto de 8 bits.'},
+{t:'Octeto',u:1,d:'Grupo de 8 bits. Una IPv4 tiene 4 octetos (32 bits).'},
+{t:'Decimal',u:1,d:'Sistema base 10 con el que se escribe cada octeto (0–255) en la notación punto decimal.'},
+{t:'Operadores lógicos (AND, OR, NOT, XOR)',u:1,d:'AND: 1 solo si ambos son 1. OR: 1 si al menos uno es 1. NOT: invierte el bit. XOR: 1 si los bits son diferentes.'},
+{t:'IANA',u:2,d:'Internet Assigned Numbers Authority. Administra el espacio global de direcciones IP, los números de sistema autónomo y la raíz del DNS. Reparte bloques a los RIR.'},
+{t:'RIR',u:2,d:'Regional Internet Registry. Recibe bloques de IANA y los asigna a ISP y organizaciones de su región: ARIN, LACNIC, RIPE NCC, APNIC y AFRINIC.'},
+{t:'DNS',u:2,d:'Domain Name System. Traduce nombres de dominio a direcciones IP. Base de datos distribuida y jerárquica; usa el puerto 53.'},
+{t:'Dirección de Red (Network ID)',u:3,d:'Primera dirección del rango: todos los bits de host en 0. Identifica a la red y no se asigna a ningún dispositivo.'},
+{t:'Dirección de Host',u:3,d:'IP utilizable entre la dirección de red y la de broadcast; identifica a un dispositivo.'},
+{t:'IP Pública',u:3,d:'Dirección única y enrutable en Internet, asignada por el ISP a partir de bloques de un RIR.'},
+{t:'IP Privada',u:3,d:'Dirección de uso interno, no enrutable en Internet: 10.0.0.0/8, 172.16.0.0/12 y 192.168.0.0/16. Requiere NAT/PAT para salir.'},
+{t:'IP reservada: Red',u:3,d:'Dirección con todos los bits de host en 0. Identifica la red.'},
+{t:'IP reservada: Broadcast',u:3,d:'Dirección con todos los bits de host en 1. Llega a todos los hosts de esa red.'},
+{t:'IP reservada: Broadcast local',u:3,d:'255.255.255.255. Llega a todos los hosts de la red local; los routers no lo reenvían.'},
+{t:'IP reservada: Loopback',u:3,d:'127.0.0.0/8 (normalmente 127.0.0.1). Prueba la pila TCP/IP del propio equipo.'},
+{t:'IP reservada: Link-local',u:3,d:'169.254.0.0/16. Válida solo en el segmento local.'},
+{t:'IP reservada: APIPA',u:3,d:'Automatic Private IP Addressing. Dirección 169.254.x.x que un equipo se autoasigna cuando no encuentra servidor DHCP.'},
+{t:'Clases de IPs (A, B, C, D, E)',u:3,d:'A: 1–126 (/8). B: 128–191 (/16). C: 192–223 (/24). D: 224–239 (multicast). E: 240–255 (experimental). 127 es loopback.'},
+{t:'Tipos de direccionamiento: Unicast',u:3,d:'Comunicación de uno a uno.'},
+{t:'Tipos de direccionamiento: Multicast',u:3,d:'De uno a un grupo de destinos suscritos (clase D, 224.0.0.0/4).'},
+{t:'Tipos de direccionamiento: Anycast',u:3,d:'Una misma IP en varios nodos; el paquete llega al más cercano.'},
+{t:'Tipos de direccionamiento: Broadcast',u:3,d:'De uno a todos los hosts de la red. No existe en IPv6.'},
+{t:'Máscara de subred',u:4,d:'Número de 32 bits que separa la parte de red (bits en 1) de la de host (bits en 0). Ej.: 255.255.255.0 = /24.'},
+{t:'Gateway',u:4,d:'Dispositivo (normalmente un router) que interconecta redes distintas.'},
+{t:'Máscara de enlace predeterminado (Default Gateway)',u:4,d:'IP del router configurada en el host para enviar el tráfico destinado a otras redes. Debe estar en la misma subred del host.'},
+{t:'Subnetting',u:5,d:'Dividir una red en subredes más pequeñas pidiendo prestados bits a la parte de host.'},
+{t:'Cálculo de subredes (2ˣ)',u:5,d:'Número de subredes = 2ˣ, donde x es el número de bits prestados.'},
+{t:'Cálculo de hosts (2ʸ − 2)',u:5,d:'Hosts utilizables = 2ʸ − 2, donde y son los bits de host; se restan la dirección de red y la de broadcast.'},
+{t:'CIDR',u:5,d:'Classless Inter-Domain Routing. Direccionamiento sin clases con prefijo de longitud variable (ej. /22); permite sumarizar rutas.'},
+{t:'VLSM',u:5,d:'Variable Length Subnet Mask. Máscaras de distinto tamaño dentro de una misma red; se asigna primero la subred más grande.'},
+{t:'NAT',u:6,d:'Network Address Translation. Traduce IP privadas a públicas (y viceversa). Puede ser estático, dinámico o PAT.'},
+{t:'PAT',u:6,d:'Port Address Translation (NAT overload). Muchas IP privadas comparten una sola IP pública, diferenciadas por el puerto.'},
+{t:'Comunicación IP: entrega directa',u:7,d:'Origen y destino están en la misma red: el paquete va directo al destino (MAC resuelta con ARP).'},
+{t:'Comunicación IP: entrega indirecta',u:7,d:'El destino está en otra red: el paquete se envía al Default Gateway, que lo reenvía salto por salto.'},
+{t:'ICMP',u:8,d:'Internet Control Message Protocol. Mensajes de control y error en la capa de red (Echo Request 8, Echo Reply 0, Destino inalcanzable 3, Tiempo excedido 11).'},
+{t:'Ping',u:8,d:'Prueba la conectividad con un host mediante ICMP Echo Request/Reply; muestra latencia y pérdida de paquetes.'},
+{t:'Traceroute (tracert)',u:8,d:'Muestra la ruta (saltos) hasta un destino incrementando el TTL; cada router responde con ICMP Time Exceeded.'},
+{t:'Checksum',u:8,d:'Valor calculado para detectar errores de transmisión. Si no coincide, el receptor descarta el paquete. IPv4 lo incluye en su encabezado; IPv6 no.'},
+{t:'IPv6',u:9,d:'Direcciones de 128 bits en hexadecimal, 8 grupos de 16 bits separados por «:». Sin broadcast; soporta autoconfiguración.'},
+{t:'IPv6 – Formato preferido',u:9,d:'Los 8 grupos de 4 dígitos hexadecimales sin abreviar. Ej.: 2001:0db8:0000:0000:0000:ff00:0042:8329.'},
+{t:'IPv6 – Formato comprimido',u:9,d:'Regla 1: omitir ceros iniciales de cada grupo. Regla 2: reemplazar una sola vez una secuencia de grupos en 0 por «::». Ej.: 2001:db8::ff00:42:8329.'}
+];
+
+'use strict';
+/* ===== Utilidades ===== */
+const $=(s,el=document)=>el.querySelector(s);
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const fmt=s=>esc(s).replace(/`([^`]+)`/g,'<code>$1</code>').replace(/\*\*([^*]+)\*\*/g,'<strong>$1</strong>').replace(/\n/g,'<br>');
+const fold=s=>s.normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase();
+const norm=s=>String(s).toLowerCase().replace(/[\s,]/g,'').replace(/^\//,'');
+function rng(seed){let a=seed>>>0;return()=>{a=(a+0x6D2B79F5)>>>0;let t=a;t=Math.imul(t^t>>>15,t|1);t^=t+Math.imul(t^t>>>7,t|61);return((t^t>>>14)>>>0)/4294967296;};}
+const ri=(r,a,b)=>a+Math.floor(r()*(b-a+1));
+const pick=(r,a)=>a[Math.floor(r()*a.length)];
+const shuf=(r,a)=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(r()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;};
+const rnd=()=>Math.random();
+const seed=()=>Math.floor(Math.random()*1e9);
+const bin8=n=>n.toString(2).padStart(8,'0');
+const terms=n=>[128,64,32,16,8,4,2,1].filter(w=>n&w).join(' + ')||'0';
+const ip2n=s=>s.split('.').reduce((a,o)=>a*256+(+o),0)>>>0;
+const n2ip=n=>[n>>>24,(n>>>16)&255,(n>>>8)&255,n&255].join('.');
+const maskN=p=>p===0?0:((0xFFFFFFFF<<(32-p))>>>0);
+const maskS=p=>n2ip(maskN(p));
+const maskB=p=>maskS(p).split('.').map(o=>bin8(+o)).join('.');
+const bcastN=(net,m)=>(net|((~m)>>>0))>>>0;
+
+/* ===== IPv6 ===== */
+const rule1=full=>full.split(':').map(x=>x.replace(/^0+(?=.)/,'')).join(':');
+function compressV6(full){
+  const gs=rule1(full).split(':');let best=-1,bl=0;
+  for(let i=0;i<8;){if(gs[i]==='0'){let j=i;while(j<8&&gs[j]==='0')j++;if(j-i>bl){bl=j-i;best=i;}i=j;}else i++;}
+  if(bl<2)return gs.join(':');
+  return gs.slice(0,best).join(':')+'::'+gs.slice(best+bl).join(':');
+}
+function expandV6(s){
+  s=s.trim().toLowerCase();
+  if((s.match(/::/g)||[]).length>1)return null;
+  let gs;
+  if(s.includes('::')){const [a,b]=s.split('::');const A=a?a.split(':'):[];const B=b?b.split(':'):[];const miss=8-A.length-B.length;if(miss<1)return null;gs=[...A,...Array(miss).fill('0'),...B];}
+  else gs=s.split(':');
+  if(gs.length!==8)return null;
+  if(!gs.every(x=>/^[0-9a-f]{1,4}$/.test(x)))return null;
+  return gs.map(x=>x.padStart(4,'0'));
+}
+const HEXP=['0042','00ff','0a00','abcd','0001','ff00','0202','b3ff','fe1e','8329','0db8','1a2b','0100','00a1'];
+function genAddr(r){
+  const L=ri(r,2,5),pos=ri(r,1,7-L),gs=[];
+  for(let i=0;i<8;i++)gs.push(i>=pos&&i<pos+L?'0000':pick(r,HEXP));
+  gs[0]=pick(r,['2001','fe80','2a00','fd00','2800']);
+  if(pos!==1&&r()<.5)gs[1]='0db8';
+  return gs.join(':');
+}
+
+/* ===== Generadores de ejercicios ===== */
+const GEN={};
+GEN.decToBits=r=>{const n=r()<.6?pick(r,[128,192,224,240,248,252,254,255,64,32,160,168,10,100,200]):ri(r,1,255);
+  return{t:'bits',q:`Activa los bits para formar el número **${n}**`,n,e:`${n} = ${terms(n)} → ${bin8(n)}`};};
+GEN.binToDec=r=>{const n=r()<.5?pick(r,[128,192,224,240,248,252,168,172,10,100]):ri(r,1,255);
+  return{t:'input',q:`Convierte a decimal: \`${bin8(n)}\``,ans:[String(n)],e:`Suma de pesos: ${terms(n)} = ${n}`,ph:'0–255'};};
+GEN.logic=r=>{const op=pick(r,['AND','OR','XOR','NOT']);const a=ri(r,1,254);const b=r()<.5?pick(r,[192,224,240,248,255,15,170,85]):ri(r,1,254);
+  const rules={AND:'AND da 1 solo si ambos bits son 1.',OR:'OR da 1 si al menos uno es 1.',XOR:'XOR da 1 si los bits son distintos.',NOT:'NOT invierte cada bit.'};
+  if(op==='NOT'){const v=(~a)&255;return{t:'input',q:`Calcula \`NOT ${bin8(a)}\``,ans:[bin8(v)],e:`${rules.NOT} Resultado: ${bin8(v)}`,ph:'8 bits'};}
+  const v={AND:a&b,OR:a|b,XOR:a^b}[op];
+  return{t:'input',q:`Calcula bit a bit:\n\`${bin8(a)}\` **${op}** \`${bin8(b)}\``,ans:[bin8(v)],e:`${rules[op]} Resultado: ${bin8(v)}`,ph:'8 bits'};};
+const CLS=[['A',1,126],['B',128,191],['C',192,223],['D',224,239],['E',240,254]];
+const CLSN={A:'Clase A',B:'Clase B',C:'Clase C',D:'Clase D (multicast)',E:'Clase E (experimental)'};
+GEN.class=r=>{const c=pick(r,CLS);const o=ri(r,c[1],c[2]);const s=`${o}.${ri(r,0,255)}.${ri(r,0,255)}.${ri(r,1,254)}`;
+  return{t:'mc',q:`¿A qué clase pertenece \`${s}\`?`,a:CLSN[c[0]],w:shuf(r,CLS.filter(x=>x[0]!==c[0])).slice(0,3).map(x=>CLSN[x[0]]),e:`El primer octeto (${o}) está en el rango ${c[1]}–${c[2]}${c[0]==='E'?' (hasta 255)':''} → clase ${c[0]}.`};};
+const TY={pub:'Pública',priv:'Privada',loop:'Loopback',apipa:'APIPA / Link-local',bcast:'Broadcast local',multi:'Multicast (clase D)'};
+function mkIp(r,k){
+  const h=()=>ri(r,1,254),x=()=>ri(r,0,255);
+  if(k==='priv'){const f=ri(r,0,2);
+    if(f===0)return[`10.${x()}.${x()}.${h()}`,'Está en 10.0.0.0/8 (rango privado clase A).'];
+    if(f===1){const s=ri(r,16,31);return[`172.${s}.${x()}.${h()}`,`172.16.0.0/12 cubre de 172.16 a 172.31; aquí el 2.º octeto es ${s} → privada.`];}
+    return[`192.168.${x()}.${h()}`,'Está en 192.168.0.0/16 (rango privado clase C).'];}
+  if(k==='pub'){const f=r();
+    if(f<.25){const s=pick(r,[15,32,48,200]);return[`172.${s}.${x()}.${h()}`,`El rango privado clase B solo llega de 172.16 a 172.31; 172.${s} queda fuera → pública.`];}
+    if(f<.4){const s=pick(r,[167,169,170]);return[`192.${s}.${x()}.${h()}`,`El rango privado es 192.168.0.0/16; 192.${s} no pertenece a él → pública.`];}
+    return[`${pick(r,[8,23,34,52,66,74,93,142,187,189,200,201,205,212])}.${x()}.${x()}.${h()}`,'No pertenece a ningún rango privado ni reservado → pública.'];}
+  if(k==='loop')return[r()<.5?'127.0.0.1':`127.${x()}.${x()}.${h()}`,'Todo el bloque 127.0.0.0/8 es loopback (prueba del propio equipo).'];
+  if(k==='apipa')return[`169.254.${h()}.${h()}`,'169.254.0.0/16: el equipo se la autoasigna cuando no encuentra servidor DHCP.'];
+  if(k==='bcast')return['255.255.255.255','255.255.255.255 es el broadcast local (limitado).'];
+  return[`${ri(r,224,239)}.${x()}.${x()}.${h()}`,'El primer octeto está en 224–239 → clase D, multicast.'];}
+const mkIpEx=(kinds,nopt)=>r=>{const k=pick(r,kinds);const [s,e]=mkIp(r,k);
+  const others=shuf(r,Object.keys(TY).filter(z=>z!==k)).slice(0,nopt-1).map(z=>TY[z]);
+  return{t:'mc',q:`¿Qué tipo de dirección es \`${s}\`?`,a:TY[k],w:others,e};};
+GEN.pubPriv=r=>{const k=pick(r,['pub','priv']);const [s,e]=mkIp(r,k);return{t:'mc',q:`¿\`${s}\` es una IP pública o privada?`,a:TY[k],w:[TY[k==='pub'?'priv':'pub']],e};};
+GEN.reserved=mkIpEx(['loop','apipa','bcast','multi','priv','pub'],4);
+const MP=[8,12,16,18,20,22,24,25,26,27,28,29,30];
+GEN.cidrToMask=r=>{const n=pick(r,MP);return{t:'input',q:`¿Qué máscara en decimal equivale a \`/${n}\`?`,ans:[maskS(n)],e:`${n} bits en 1 → ${maskB(n)} = ${maskS(n)}`,ph:'255.255.255.0'};};
+GEN.maskToCidr=r=>{const n=pick(r,MP);return{t:'input',q:`¿Qué prefijo equivale a \`${maskS(n)}\`? (ej. /24)`,ans:[String(n),'/'+n],e:`Cuenta los bits en 1: ${maskB(n)} → ${n} bits → /${n}`,ph:'/__'};};
+GEN.hosts=r=>{const n=ri(r,16,30),hb=32-n,v=2**hb-2,sm=r()<.4;
+  return{t:'input',q:`¿Cuántos hosts utilizables tiene una red ${sm?'con máscara `'+maskS(n)+'`':'`/'+n+'`'}?`,ans:[String(v)],e:`Bits de host: 32 − ${n} = ${hb}. Hosts = 2^${hb} − 2 = ${v}.`,ph:'número'};};
+GEN.subnets=r=>{const base=pick(r,[8,16,24]);const b=ri(r,1,base===24?5:6);
+  return{t:'input',q:`Una red \`/${base}\` se divide pidiendo prestados **${b}** bits. ¿Cuántas subredes se obtienen?`,ans:[String(2**b)],e:`2^${b} = ${2**b} subredes (nuevo prefijo /${base+b}).`,ph:'número'};};
+GEN.split=r=>{
+  if(r()<.5){const k=pick(r,[2,3,4,5,6,8,10,12,16]);const b=Math.ceil(Math.log2(k));
+    return{t:'input',q:`Divides \`192.168.10.0/24\` en al menos **${k}** subredes. ¿Qué prefijo usarás? (ej. /26)`,ans:[String(24+b),'/'+(24+b)],e:`Bits prestados: 2^${b} = ${2**b} ≥ ${k} → /24 + ${b} = /${24+b}.`,ph:'/__'};}
+  const H=pick(r,[2,5,10,12,25,30,50,60,100,120]);const hb=Math.ceil(Math.log2(H+2));
+  return{t:'input',q:`Cada subred de \`192.168.10.0/24\` necesita al menos **${H}** hosts. ¿Qué prefijo usarás? (ej. /26)`,ans:[String(32-hb),'/'+(32-hb)],e:`2^${hb} − 2 = ${2**hb-2} ≥ ${H} → ${hb} bits de host → /${32-hb}.`,ph:'/__'};};
+GEN.vlsmPrefix=r=>{const H=ri(r,2,500);const hb=Math.ceil(Math.log2(H+2));
+  return{t:'input',q:`Una subred VLSM necesita **${H}** hosts. ¿Qué prefijo asignas para aprovechar mejor las direcciones? (ej. /26)`,ans:[String(32-hb),'/'+(32-hb)],e:`2^${hb} − 2 = ${2**hb-2} ≥ ${H} (con un bit menos no alcanza) → /${32-hb}.`,ph:'/__'};};
+GEN.vlsmNext=r=>{const A=pick(r,[10,20,25,50,60,100,120]);const hb=Math.ceil(Math.log2(A+2));const blk=2**hb;const t=ri(r,0,254);
+  return{t:'input',q:`Bloque \`192.168.${t}.0/24\`. La subred A necesita **${A}** hosts y se asigna primero. ¿Con qué dirección de red empieza la siguiente subred?`,ans:[`192.168.${t}.${blk}`],e:`${A} hosts → /${32-hb} (bloque de ${blk}). A ocupa .0 a .${blk-1}; la siguiente inicia en .${blk}.`,ph:'0.0.0.0'};};
+GEN.jump=r=>{const p=ri(r,25,30);const m=maskN(p)&255;
+  return{t:'input',q:r()<.5?`Máscara \`${maskS(p)}\`: ¿cuál es el salto (incremento) entre subredes?`:`Prefijo \`/${p}\`: ¿cuál es el salto entre subredes en el último octeto?`,ans:[String(256-m)],e:`Último octeto de la máscara: ${m}. Salto = 256 − ${m} = ${256-m}.`,ph:'número'};};
+GEN.subnetQ=r=>{
+  const third=r()<.3;let p,ipn,m,net,bc,tries=0;
+  do{if(third){p=ri(r,17,23);ipn=ip2n(`172.${ri(r,16,31)}.${ri(r,0,255)}.${ri(r,1,254)}`);}else{p=ri(r,25,30);ipn=ip2n(`192.168.${ri(r,0,255)}.${ri(r,1,254)}`);}
+    m=maskN(p);net=(ipn&m)>>>0;bc=bcastN(net,m);tries++;}while((ipn===net||ipn===bc)&&tries<20);
+  const k=pick(r,['net','bc','first','last']);
+  const L={net:'su dirección de red (Network ID)',bc:'su dirección de broadcast',first:'la primera IP utilizable',last:'la última IP utilizable'};
+  const A={net:n2ip(net),bc:n2ip(bc),first:n2ip(net+1),last:n2ip(bc-1)};
+  const idx=third?2:3,mo=(m>>>(8*(3-idx)))&255,step=256-mo,o=(ipn>>>(8*(3-idx)))&255,st=o-o%step;
+  return{t:'input',q:`Host \`${n2ip(ipn)}/${p}\`. ¿Cuál es ${L[k]}?`,ans:[A[k]],e:`Máscara /${p} = ${maskS(p)}. Salto = 256 − ${mo} = ${step} en el ${idx===3?'4.º':'3.er'} octeto; el ${o} cae en el bloque ${st}–${st+step-1}. Red: ${n2ip(net)} · Broadcast: ${n2ip(bc)}.`,ph:'0.0.0.0'};};
+GEN.netId=r=>{
+  const p=pick(r,[8,16,24,24,24,20,26,27,28,22]);
+  const s=pick(r,[`10.${ri(r,0,255)}.${ri(r,0,255)}.${ri(r,1,254)}`,`172.${ri(r,16,31)}.${ri(r,0,255)}.${ri(r,1,254)}`,`192.168.${ri(r,0,255)}.${ri(r,1,254)}`]);
+  const ipn=ip2n(s),m=maskN(p),net=(ipn&m)>>>0;const ms=maskS(p).split('.').map(Number),os=s.split('.').map(Number);
+  const pi=ms.findIndex(v=>v!==0&&v!==255);let ex='';
+  if(pi>=0)ex=` En el octeto ${pi+1}: ${bin8(os[pi])} AND ${bin8(ms[pi])} = ${bin8(os[pi]&ms[pi])} (${os[pi]&ms[pi]}).`;
+  return{t:'input',q:`Calcula la dirección de red:\n\`${s}\` AND \`${maskS(p)}\``,ans:[n2ip(net)],e:`Los octetos con 255 se conservan; los 0 pasan a 0.${ex} Red: ${n2ip(net)}.`,ph:'0.0.0.0'};};
+GEN.gateway=r=>{
+  const p=pick(r,[24,25,26,27]);const a=ri(r,0,254);const host=ip2n(`192.168.${a}.${ri(r,2,250)}`);
+  const m=maskN(p),net=(host&m)>>>0,bc=bcastN(net,m),blk=bc-net+1;
+  const cands=[net+1,bc-1].filter(v=>v!==host);const good=pick(r,cands);
+  const opts=shuf(r,[n2ip(good),n2ip(net),n2ip(bc),n2ip(net+blk+1)]);
+  return{t:'mc',q:`Host \`${n2ip(host)}\` con máscara \`${maskS(p)}\` (/${p}). ¿Cuál de estas IP puede ser su Default Gateway?`,a:n2ip(good),w:opts.filter(v=>v!==n2ip(good)),e:`La red es ${n2ip(net)} y su broadcast ${n2ip(bc)}. El gateway debe estar en la misma subred y no puede ser la dirección de red ni el broadcast.`};};
+GEN.delivery=r=>{
+  const p=pick(r,[24,25,26,27]);const i1=ip2n(`192.168.${ri(r,0,254)}.${ri(r,1,254)}`);const m=maskN(p),net=(i1&m)>>>0,bc=bcastN(net,m),blk=bc-net+1;
+  let i2;
+  if(r()<.5){do{i2=net+ri(r,1,blk-2);}while(i2===i1);}
+  else if(r()<.3){i2=ip2n(pick(r,['8.8.8.8','1.1.1.1','142.250.64.78','201.141.10.5']));}
+  else{i2=net+blk+ri(r,1,blk-2);}
+  const n1=(i1&m)>>>0,n2=(i2&m)>>>0,same=n1===n2;
+  return{t:'mc',q:`Origen \`${n2ip(i1)}\` · Destino \`${n2ip(i2)}\` · Máscara \`${maskS(p)}\` (/${p}). ¿Qué tipo de entrega se usa?`,
+    a:same?'Entrega directa':'Entrega indirecta (vía Default Gateway)',w:[same?'Entrega indirecta (vía Default Gateway)':'Entrega directa'],
+    e:`${n2ip(i1)} AND ${maskS(p)} = ${n2ip(n1)}; ${n2ip(i2)} AND ${maskS(p)} = ${n2ip(n2)}. ${same?'Son iguales → misma red → entrega directa.':'Son distintas → otra red → el paquete va al Default Gateway.'}`};};
+GEN.v6rule1=r=>{const f=genAddr(r);const ans=rule1(f);
+  return{t:'input',q:`Aplica **solo la regla 1** (omitir ceros iniciales) a:\n\`${f}\``,check:v=>v.trim().toLowerCase()===ans,show:ans,e:'Quita los ceros a la izquierda de cada grupo; un grupo 0000 queda como 0. Los ceros a la derecha no se quitan.',ph:'8 grupos'};};
+GEN.v6full=r=>{const f=genAddr(r);const ans=compressV6(f);
+  return{t:'input',q:`Comprime al máximo (reglas 1 y 2):\n\`${f}\``,show:ans,
+    check:v=>{const s=v.trim().toLowerCase();if((s.match(/::/g)||[]).length!==1)return false;const ex=expandV6(s);if(!ex||ex.join(':')!==f)return false;return s.split(':').every(x=>x===''||x===x.replace(/^0+(?=.)/,''));},
+    e:'Quita los ceros iniciales y reemplaza la secuencia más larga de grupos 0 por «::» (una sola vez).',ph:'usa ::'};};
+GEN.v6gap=r=>{const s=compressV6(genAddr(r));const ex=s.split('::').join(':').split(':').filter(Boolean).length;
+  return{t:'input',q:`En \`${s}\`, ¿cuántos grupos de ceros reemplaza el \`::\`?`,ans:[String(8-ex)],e:`Hay ${ex} grupos escritos; 8 − ${ex} = ${8-ex} grupos de 0000.`,ph:'número'};};
+GEN.v6expand=r=>{const l=pick(r,['fe80','2001:db8','fd00','2a00:1450','']);const rt=pick(r,['1','2','a:b','ff:1','abcd:12']);const s=`${l}::${rt}`;const full=expandV6(s).join(':');
+  return{t:'input',q:`Escribe en **formato preferido** (8 grupos de 4 dígitos):\n\`${s}\``,check:v=>v.trim().toLowerCase()===full,show:full,e:`${s} → ${full}. El «::» se rellena con grupos 0000 hasta completar 8 y cada grupo se completa a 4 dígitos.`,ph:'xxxx:xxxx:…'};};
+
+/* ===== Estado ===== */
+const S={xp:0,streak:0,last:'',done:{},mist:[]};
+const LES={},ALL=[];
+UNITS.forEach(u=>u.lessons.forEach(l=>{l.u=u;LES[l.id]=l;ALL.push(l);}));
+const KEY='ruta-redes-u2';
+function load(){try{const v=JSON.parse(localStorage.getItem(KEY)||'null');if(v)Object.assign(S,v);}catch(e){}}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){}}
+const today=()=>new Date().toLocaleDateString('en-CA');
+function touchStreak(){const t=today();if(S.last===t)return;const y=new Date(Date.now()-864e5).toLocaleDateString('en-CA');S.streak=S.last===y?S.streak+1:1;S.last=t;}
+const refKey=r=>{if(r.g)return `g:${r.g}:${r.s}`;const x=LES[r.l].ex[r.i];return typeof x==='string'?`${r.l}:${r.i}:${r.s}`:`${r.l}:${r.i}`;};
+
+function build(ref){
+  if(ref.g)return Object.assign({ref},GEN[ref.g](rng(ref.s)));
+  const x=LES[ref.l].ex[ref.i];
+  if(typeof x==='string')return Object.assign({ref},GEN[x.slice(2)](rng(ref.s)));
+  return Object.assign({ref},x);
+}
+function lessonRefs(l,n){return shuf(rnd,l.ex.map((_,i)=>i)).slice(0,n).map(i=>({l:l.id,i,s:seed()}));}
+const DRILLS=[
+ {id:'bin',name:'Binario y decimal',sub:'Convierte octetos',gens:['decToBits','binToDec','binToDec'],cable:'blue'},
+ {id:'log',name:'Operaciones lógicas',sub:'AND, OR, XOR y NOT',gens:['logic'],cable:'blue'},
+ {id:'cls',name:'Clases y tipos de IP',sub:'Clasifica direcciones',gens:['class','pubPriv','reserved'],cable:'green'},
+ {id:'msk',name:'Máscaras y prefijos',sub:'De /n a decimal y al revés',gens:['cidrToMask','maskToCidr'],cable:'red'},
+ {id:'hst',name:'Hosts y subredes',sub:'2ˣ y 2ʸ − 2',gens:['hosts','subnets','split','jump'],cable:'purple'},
+ {id:'net',name:'Red, broadcast y rangos',sub:'Subnetting completo',gens:['subnetQ','netId'],cable:'purple'},
+ {id:'vls',name:'VLSM',sub:'Prefijo y siguiente subred',gens:['vlsmPrefix','vlsmNext'],cable:'purple'},
+ {id:'dlv',name:'Entrega y gateway',sub:'Directa o indirecta',gens:['delivery','gateway'],cable:'teal'},
+ {id:'v6',name:'IPv6',sub:'Comprimir y expandir',gens:['v6rule1','v6full','v6gap','v6expand'],cable:'indigo'}];
+
+/* ===== Iconos ===== */
+const IC={
+ heart:'<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>',
+ flame:'<svg class="fl" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 2c1 3.5 5 5.5 5 10a5 5 0 0 1-10 0c0-2 1-3.5 2-4.5 0 2 1 3 2 3 0-3-1-5 1-8.5z"/></svg>',
+ star:'<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 2l2.9 6.3 6.9.8-5.1 4.7 1.4 6.8L12 17.3l-6.1 3.3 1.4-6.8-5.1-4.7 6.9-.8z"/></svg>',
+ xp:'<svg class="sr" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 2l2.9 6.3 6.9.8-5.1 4.7 1.4 6.8L12 17.3l-6.1 3.3 1.4-6.8-5.1-4.7 6.9-.8z"/></svg>',
+ check:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+ x:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/></svg>',
+ path:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 20a2 2 0 1 0 0-4 2 2 0 0 0 0 4zM18 8a2 2 0 1 0 0-4 2 2 0 0 0 0 4zM6 16V9a3 3 0 0 1 3-3h7" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>',
+ redo:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 12a8 8 0 1 1-2.3-5.6M20 4v4h-4" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+ book:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4h10a4 4 0 0 1 4 4v12H9a4 4 0 0 1-4-4V4zM5 16a4 4 0 0 1 4-4h10" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"/></svg>'
+};
+const stars=n=>[1,2,3].map(i=>`<span class="st ${i<=n?'on':''}">${IC.star}</span>`).join('');
+
+/* ===== Pantallas principales ===== */
+let tab='ruta';
+const app=()=>$('#app');
+function renderHome(){
+  const total=ALL.length,n=ALL.filter(l=>S.done[l.id]).length,nx=ALL.find(l=>!S.done[l.id]);
+  let h=`<header class="hero"><h1>Ruta de Redes</h1><p>Unidad II · Direccionamiento IP, subnetting e IPv6</p>
+  <div class="stats"><span class="chip">${IC.flame}<b>${S.streak}</b> ${S.streak===1?'día':'días'} de racha</span><span class="chip">${IC.xp}<b>${S.xp}</b> XP</span></div>
+  <div class="prog" role="progressbar" aria-valuemin="0" aria-valuemax="${total}" aria-valuenow="${n}"><i style="width:${n/total*100}%"></i></div>
+  <p class="small">${n} de ${total} lecciones completadas</p></header>`;
+  if(nx)h+=`<div class="next u-${nx.u.cable}"><div><p class="small">Sigue con la lección ${nx.id}</p><h2>${nx.name}</h2></div><button class="btn" data-l="${nx.id}">Empezar</button></div>`;
+  else h+=`<div class="next u-green"><div><h2>Completaste toda la ruta</h2><p class="small">Refuerza lo aprendido en la pestaña Repaso.</p></div></div>`;
+  UNITS.forEach(u=>{
+    const dn=u.lessons.filter(l=>S.done[l.id]).length;
+    h+=`<section class="unit u-${u.cable}"><div class="uh"><div><h2>Unidad ${u.id}: ${u.name}</h2><p>${u.sub}</p></div><span class="cnt">${dn}/${u.lessons.length}</span></div><div class="path">`;
+    u.lessons.forEach(l=>{const d=S.done[l.id],isN=nx&&nx.id===l.id;
+      h+=`<button class="les" data-l="${l.id}"><span class="node${d?' done':''}${isN?' next':''}">${d?IC.check:l.id}</span><span class="lt"><b>${l.name}</b><small>${l.sub}</small></span><span class="sts" aria-label="${d?d.stars+' de 3 estrellas':'sin completar'}">${d?stars(d.stars):''}</span></button>`;});
+    h+='</div></section>';});
+  app().innerHTML=h;
+}
+function renderRep(){
+  const m=S.mist.length;
+  let h=`<div class="pg"><h1>Repaso</h1><p class="small">Refuerza lo que te falló y practica con preguntas nuevas cada vez.</p>
+  <div class="card u-red"><div><h2>Repasar mis errores</h2><p class="small">${m?`${m} ${m===1?'pregunta pendiente':'preguntas pendientes'}`:'No tienes errores pendientes'}</p></div><button class="btn" data-act="mist" ${m?'':'disabled'}>Repasar</button></div>
+  <div class="card u-purple"><div><h2>Examen final</h2><p class="small">20 preguntas de todos los temas de la guía</p></div><button class="btn" data-act="exam">Comenzar</button></div>
+  <h3>Prácticas rápidas</h3><div class="drills">`;
+  DRILLS.forEach(d=>{h+=`<button class="drill u-${d.cable}" data-drill="${d.id}"><b>${d.name}</b><small>${d.sub}</small></button>`;});
+  app().innerHTML=h+'</div></div>';
+}
+function renderGlo(){
+  app().innerHTML=`<div class="pg"><h1>Glosario</h1><p class="small">Todos los conceptos de la guía, en el orden de la ruta.</p><input class="search" id="q" type="search" placeholder="Buscar un concepto" aria-label="Buscar en el glosario" autocomplete="off"><div id="gl"></div></div>`;
+  const draw=()=>{const q=fold($('#q').value.trim());let h='',last=0;
+    GLOSS.filter(x=>!q||fold(x.t+' '+x.d).includes(q)).forEach(x=>{
+      if(x.u!==last){last=x.u;const u=UNITS[x.u-1];h+=`<div class="gu u-${u.cable}"><i></i>Unidad ${u.id}: ${u.name}</div>`;}
+      const u=UNITS[x.u-1];h+=`<div class="term u-${u.cable}"><b>${esc(x.t)}</b><span>${esc(x.d)}</span></div>`;});
+    $('#gl').innerHTML=h||'<p class="empty">No hay conceptos que coincidan con la búsqueda.</p>';};
+  $('#q').addEventListener('input',draw);draw();
+}
+function render(){({ruta:renderHome,repaso:renderRep,glosario:renderGlo})[tab]();
+  document.querySelectorAll('#nav button').forEach(b=>{if(b.dataset.tab===tab)b.setAttribute('aria-current','page');else b.removeAttribute('aria-current');});}
+function go(t){tab=t;render();window.scrollTo(0,0);}
+
+/* ===== Sesiones ===== */
+let ses=null;
+const lessonEl=()=>$('#lesson');
+const PRAISE=['¡Correcto!','¡Bien hecho!','¡Exacto!','¡Muy bien!'];
+function startSession(o){
+  ses=Object.assign({queue:o.refs.slice(),total:o.refs.length,done:0,first:0,xp:0,tries:new Set(),hearts:o.kind==='lesson'?5:null},o);
+  const el=lessonEl();el.className='u-'+(o.cable||'blue');el.hidden=false;document.body.style.overflow='hidden';
+  el.innerHTML='<div id="hud"></div><div id="stage" style="display:flex;flex-direction:column;flex:1;min-height:0"></div>';
+  nextEx();
+}
+function closeSession(){ses=null;const el=lessonEl();el.hidden=true;el.innerHTML='';document.body.style.overflow='';render();}
+function hudHtml(){const p=Math.round(ses.done/ses.total*100);
+  return `<header class="l-top"><button class="x" id="quit" aria-label="Salir de la sesión">${IC.x}</button><div class="bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${p}"><i style="width:${p}%"></i></div>${ses.hearts!==null?`<div class="hearts${ses.hearts<=1?' low':''}" aria-label="${ses.hearts} vidas">${IC.heart}<b>${ses.hearts}</b></div>`:''}</header>`;}
+function updHud(){$('#hud').innerHTML=hudHtml();$('#quit').onclick=askQuit;}
+function askQuit(){
+  const m=document.createElement('div');m.className='modal';m.setAttribute('role','dialog');m.setAttribute('aria-modal','true');
+  m.innerHTML='<div><h2>¿Salir de la sesión?</h2><p class="small">Perderás el avance de esta sesión.</p><button class="btn" id="stay">Seguir practicando</button><button class="btn ghost" id="leave">Salir</button></div>';
+  lessonEl().appendChild(m);$('#stay').focus();$('#stay').onclick=()=>m.remove();$('#leave').onclick=closeSession;
+}
+function nextEx(){
+  if(!ses.queue.length)return finish();
+  const ref=ses.queue.shift();ses.ref=ref;ses.ex=build(ref);ses.st={};ses.locked=false;
+  updHud();const x=ses.ex,st=ses.st;
+  const ins={mc:'Elige la respuesta correcta',tf:'Elige verdadero o falso',match:'Toca las parejas que van juntas',input:'Escribe la respuesta',bits:'Toca los bits para activarlos',order:'Toca los pasos en el orden correcto'}[x.t];
+  let body='';
+  if(x.t==='mc'){ses.opts=shuf(rnd,[x.a,...x.w]);body=ses.opts.map((o,i)=>`<button class="opt" data-i="${i}"><span class="k">${i+1}</span><span>${fmt(o)}</span></button>`).join('');}
+  else if(x.t==='tf'){body='<div class="tf"><button class="opt" data-i="1">Verdadero</button><button class="opt" data-i="0">Falso</button></div>';}
+  else if(x.t==='input'){const num=!x.check&&/^\d+$/.test(x.ans[0]);body=`<input class="txt" id="ans" type="text" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" inputmode="${num?'numeric':'text'}" placeholder="${esc(x.ph||'')}" aria-label="Tu respuesta">`;}
+  else if(x.t==='bits'){st.bits=Array(8).fill(0);body=`<div class="bits">${[128,64,32,16,8,4,2,1].map((w,i)=>`<button class="bit" data-b="${i}" aria-pressed="false"><span class="w">${w}</span><span class="v">0</span></button>`).join('')}</div><p class="sum" id="sum">Suma: <b>0</b></p>`;}
+  else if(x.t==='order'){st.seq=[];let idx=x.s.map((_,i)=>i),t=0;do{idx=shuf(rnd,idx);t++;}while(idx.every((v,i)=>v===i)&&t<10);st.pool=idx;body='<div class="zone" id="zone" aria-label="Tu orden"></div><div class="pool" id="pool"></div>';}
+  else if(x.t==='match'){st.l=null;st.m=new Set();st.err=0;st.r=shuf(rnd,x.p.map((_,i)=>i));
+    body=`<div class="mtc"><div>${x.p.map((p,i)=>`<button class="opt" data-ml="${i}" style="margin-bottom:10px">${fmt(p[0])}</button>`).join('')}</div><div>${st.r.map(i=>`<button class="opt" data-mr="${i}" style="margin-bottom:10px">${fmt(x.p[i][1])}</button>`).join('')}</div></div>`;}
+  $('#stage').innerHTML=`<main class="l-main"><p class="ins">${ins}</p><h2 class="l-q">${fmt(x.q)}</h2>${body}</main><footer class="l-foot" id="foot"><div class="foot-in"><button class="btn big" id="chk" disabled>${x.t==='match'?'Une todas las parejas':'Comprobar'}</button></div></footer>`;
+  bindEx();$('#quit').onclick=askQuit;$('#chk').onclick=check;
+  if(x.t==='input')$('#ans').focus();
+}
+function setChk(on){const c=$('#chk');if(c)c.disabled=!on;}
+function bindEx(){
+  const x=ses.ex,st=ses.st,main=$('.l-main');
+  if(x.t==='mc'||x.t==='tf'){main.querySelectorAll('.opt').forEach(b=>b.onclick=()=>{if(ses.locked)return;st.sel=x.t==='tf'?b.dataset.i==='1':+b.dataset.i;main.querySelectorAll('.opt').forEach(o=>o.classList.toggle('sel',o===b));setChk(true);});}
+  else if(x.t==='input'){$('#ans').addEventListener('input',e=>{st.val=e.target.value;setChk(e.target.value.trim()!=='');});}
+  else if(x.t==='bits'){setChk(true);main.querySelectorAll('.bit').forEach(b=>b.onclick=()=>{if(ses.locked)return;const i=+b.dataset.b;st.bits[i]^=1;b.classList.toggle('on',!!st.bits[i]);b.setAttribute('aria-pressed',!!st.bits[i]);b.querySelector('.v').textContent=st.bits[i];$('#sum').innerHTML=`Suma: <b>${bitsSum()}</b>`;});}
+  else if(x.t==='order'){drawOrder();}
+  else if(x.t==='match'){
+    const L=[...main.querySelectorAll('[data-ml]')],R=[...main.querySelectorAll('[data-mr]')];
+    L.forEach(b=>b.onclick=()=>{if(ses.locked||b.classList.contains('done'))return;st.l=+b.dataset.ml;L.forEach(o=>o.classList.toggle('sel',o===b));});
+    R.forEach(b=>b.onclick=()=>{if(ses.locked||b.classList.contains('done')||st.l===null)return;const ri_=+b.dataset.mr;
+      if(ri_===st.l){const lb=L[st.l];lb.classList.remove('sel');lb.classList.add('done');b.classList.add('done');st.m.add(st.l);st.l=null;
+        if(st.m.size===x.p.length)resolve(st.err===0,x.p.map(p=>`${fmt(p[0])} → ${fmt(p[1])}`).join('<br>'));}
+      else{st.err++;[L[st.l],b].forEach(o=>{o.classList.add('shake');setTimeout(()=>o.classList.remove('shake'),320);});L[st.l].classList.remove('sel');st.l=null;}});
+  }
+}
+const bitsSum=()=>ses.st.bits.reduce((a,v,i)=>a+(v?[128,64,32,16,8,4,2,1][i]:0),0);
+function drawOrder(){
+  const x=ses.ex,st=ses.st;
+  $('#zone').innerHTML=st.seq.map(i=>`<button class="chip2" data-z="${i}">${fmt(x.s[i])}</button>`).join('');
+  $('#pool').innerHTML=st.pool.filter(i=>!st.seq.includes(i)).map(i=>`<button class="chip2" data-p="${i}">${fmt(x.s[i])}</button>`).join('');
+  if(ses.locked)return;
+  $('#zone').querySelectorAll('button').forEach(b=>b.onclick=()=>{st.seq=st.seq.filter(i=>i!==+b.dataset.z);drawOrder();});
+  $('#pool').querySelectorAll('button').forEach(b=>b.onclick=()=>{st.seq.push(+b.dataset.p);drawOrder();});
+  setChk(st.seq.length===x.s.length);
+}
+function evaluate(){
+  const x=ses.ex,st=ses.st;
+  if(x.t==='mc')return{ok:ses.opts[st.sel]===x.a,show:fmt(x.a)};
+  if(x.t==='tf')return{ok:st.sel===x.a,show:x.a?'Verdadero':'Falso'};
+  if(x.t==='input'){const v=st.val||'';const ok=x.check?x.check(v):x.ans.some(a=>norm(a)===norm(v));return{ok,show:`<code>${esc(x.show||x.ans[0])}</code>`};}
+  if(x.t==='bits'){return{ok:bitsSum()===x.n,show:`${x.n} = <code>${bin8(x.n)}</code>`};}
+  if(x.t==='order'){return{ok:st.seq.every((v,i)=>v===i),show:x.s.map((s,i)=>`${i+1}. ${fmt(s)}`).join('<br>')};}
+}
+function check(){if(ses.locked)return;const r=evaluate();resolve(r.ok,r.show);}
+function resolve(ok,showHtml){
+  if(ses.locked)return;ses.locked=true;const x=ses.ex,k=refKey(ses.ref),retry=ses.tries.has(k);
+  const main=$('.l-main');
+  main.querySelectorAll('.opt,.bit,.chip2').forEach(b=>{if(b.tagName==='BUTTON')b.style.pointerEvents='none';});
+  if(x.t==='mc'){const c=ses.opts.indexOf(x.a);main.querySelectorAll('.opt').forEach((o,i)=>{if(i===c)o.classList.add('right');else if(o.classList.contains('sel'))o.classList.add('wrong');});}
+  if(x.t==='tf'){main.querySelectorAll('.opt').forEach(o=>{const v=o.dataset.i==='1';if(v===x.a)o.classList.add('right');else if(o.classList.contains('sel'))o.classList.add('wrong');});}
+  if(x.t==='input'){const a=$('#ans');a.disabled=true;a.classList.add(ok?'right':'wrong');}
+  if(ok){ses.done++;ses.xp+=retry?5:10;if(!retry)ses.first++;
+    if(ses.kind==='mistakes'&&!retry)S.mist=S.mist.filter(m=>refKey(m)!==k);}
+  else{
+    if(ses.hearts!==null)ses.hearts--;
+    if(!S.mist.some(m=>refKey(m)===k))S.mist.push(Object.assign({},ses.ref));
+    if(!retry){ses.tries.add(k);ses.queue.push(ses.ref);}else ses.done++;
+  }
+  save();updHud();
+  const f=$('#foot');f.className='l-foot '+(ok?'good':'bad');f.setAttribute('aria-live','polite');
+  const dead=ses.hearts!==null&&ses.hearts<=0;
+  f.innerHTML=`<div class="foot-in"><div class="fb"><strong>${ok?pick(rnd,PRAISE):'Respuesta correcta'}</strong>${ok?'':`<div class="ans">${showHtml}</div>`}${x.e?`<p>${fmt(x.e)}</p>`:''}</div><button class="btn big" id="cont">Continuar</button></div>`;
+  $('#cont').onclick=()=>dead?failScreen():nextEx();$('#cont').focus();
+}
+function endScreen(html){$('#hud').innerHTML='';$('#stage').innerHTML=`<div class="end">${html}</div>`;}
+function failScreen(){
+  endScreen(`<h1>Te quedaste sin vidas</h1><p class="small">Repasa la explicación de cada respuesta y vuelve a intentarlo: las preguntas cambian cada vez.</p><button class="btn" id="again">Intentar de nuevo</button><button class="btn ghost" id="out">Salir</button>`);
+  $('#again').onclick=()=>{const l=LES[ses.lid];startSession({kind:'lesson',title:l.name,lid:l.id,cable:l.u.cable,refs:lessonRefs(l,10)});};$('#out').onclick=closeSession;
+}
+function finish(){
+  const acc=Math.round(ses.first/ses.total*100),st=acc>=90?3:acc>=70?2:1;let bonus=0;
+  touchStreak();
+  if(ses.kind==='lesson'){bonus=20;const prev=S.done[ses.lid];S.done[ses.lid]={stars:Math.max(prev?prev.stars:0,st)};}
+  S.xp+=ses.xp+bonus;save();
+  const nxt=ses.kind==='lesson'?ALL.find(l=>!S.done[l.id]):null;
+  const titles={lesson:'¡Lección completada!',mistakes:'¡Repaso terminado!',exam:'¡Examen terminado!',drill:'¡Práctica terminada!'};
+  endScreen(`<h1>${titles[ses.kind]}</h1><div class="bigst" aria-label="${st} de 3 estrellas">${[1,2,3].map(i=>`<span class="${i<=st?'on':''}">${IC.star}</span>`).join('')}</div>
+  <div class="res"><div><b>${ses.xp+bonus}</b><span>XP ganada</span></div><div><b>${acc}%</b><span>Al primer intento</span></div></div>
+  ${nxt?`<button class="btn" id="nx">Siguiente: ${nxt.name}</button><button class="btn ghost" id="bk">Volver</button>`:`<button class="btn" id="bk">Continuar</button>`}`);
+  if(nxt)$('#nx').onclick=()=>{const l=nxt;startSession({kind:'lesson',title:l.name,lid:l.id,cable:l.u.cable,refs:lessonRefs(l,10)});};
+  $('#bk').onclick=closeSession;$('#bk').focus();
+}
+
+/* ===== Arranque de sesiones ===== */
+function startLesson(id){const l=LES[id];startSession({kind:'lesson',title:l.name,lid:id,cable:l.u.cable,refs:lessonRefs(l,10)});}
+function startDrill(id){const d=DRILLS.find(x=>x.id===id);const order=shuf(rnd,d.gens);
+  startSession({kind:'drill',title:d.name,cable:d.cable,refs:Array.from({length:10},(_,k)=>({g:order[k%order.length],s:seed()}))});}
+function startExam(){const pool=[];ALL.forEach(l=>l.ex.forEach((_,i)=>pool.push({l:l.id,i,s:seed()})));
+  startSession({kind:'exam',title:'Examen final',cable:'purple',refs:shuf(rnd,pool).slice(0,20)});}
+function startMist(){const refs=shuf(rnd,S.mist).slice(0,10).map(r=>Object.assign({},r));if(refs.length)startSession({kind:'mistakes',title:'Repaso de errores',cable:'red',refs});}
+
+function init(){
+  load();
+  document.addEventListener('click',e=>{
+    const a=e.target.closest('[data-l],[data-drill],[data-act]');if(!a||!$('#app').contains(a))return;
+    if(a.dataset.l)startLesson(a.dataset.l);else if(a.dataset.drill)startDrill(a.dataset.drill);
+    else if(a.dataset.act==='exam')startExam();else if(a.dataset.act==='mist')startMist();
+  });
+  document.querySelectorAll('#nav button').forEach(b=>b.onclick=()=>go(b.dataset.tab));
+  document.addEventListener('keydown',e=>{
+    if(!ses||lessonEl().hidden)return;
+    if(lessonEl().querySelector('.modal'))return;
+    if(e.key==='Enter'){const c=$('#cont')||$('#chk');if(c&&!c.disabled){e.preventDefault();c.click();}else if(c){e.preventDefault();}}
+    else if(/^[1-4]$/.test(e.key)&&ses.ex&&ses.ex.t==='mc'&&!ses.locked&&document.activeElement.tagName!=='INPUT'){const b=lessonEl().querySelector(`.opt[data-i="${+e.key-1}"]`);if(b)b.click();}
+  });
+  render();
+}
+if(typeof document!=='undefined'&&document.addEventListener)document.addEventListener('DOMContentLoaded',init);
+
+</script>
+</body>
+</html>
